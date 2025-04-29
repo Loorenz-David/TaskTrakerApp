@@ -53,7 +53,7 @@ def logout():
     return redirect('/login')
 
 
-@main.route('/main/jsserving/get_items', methods=['POST'])
+@main.route('/main/jsserving/get_items', methods=['GET','POST'])
 def get_items():
 
     data = request.json
