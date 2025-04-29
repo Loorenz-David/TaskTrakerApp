@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/hamburger_menu.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/container_style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/grid_styles.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/colors.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/text_styles.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/btn_styles.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bg_styles.css')}}">
+    {% block stylesheet %}
+
+    {% endblock %}
+
+</head>
+<body>
+  {% if current_user.is_authenticated %}
+  <div class="hamburger-btn" >
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    </div>
+    <div class="menu-page">
+      <div class="flex-row justify-end" style="display: none;" id="addItemBtn">
+        <div class="btn bg-white" style="width: 100px;">
+            <a style="text-decoration: none;" href="/add_item">Add item</a>
+        </div>
+      </div>
+        <ul id="ulSections">
+        </ul>
+        
+        <div class=" flex-row justify-start margin-push-down">
+          <div class="logout">
+            <a href="/main/jsserving/logout" >Logout</a>
+          </div>
+          
+        </div>
+    </div>
+
+    
+  
+        
+    
+  {% endif %}
+   
+
+    {% block content %}
+    {% endblock%}
+    <script src="{{url_for('static' , filename='js/menu_interactions.js')}}"></script>
+    {% block js %}
+    {% endblock%}
+
+
+
+</body>
+</html>
+
