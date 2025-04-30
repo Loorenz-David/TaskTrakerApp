@@ -95,9 +95,13 @@ sectionList.forEach((section)=>{
     })
 })
 
-async function setPageForSelection(selectedSection){
+async function setPageForSelection(selectedSection,toggleMenu=true){
     itemsList.innerHTML = ''
-    toogle_hamburger_btn()
+
+    if(toggleMenu){
+        toogle_hamburger_btn()
+    }
+    
    
     dataDict = {'section':selectedSection,'is_completed':false,'is_visible':true}
 
@@ -142,7 +146,8 @@ const item_condition = document.getElementById('item_condition')
 const item_quantity = document.getElementById('item_quantity')
 const item_upholstery = document.getElementById('item_upholstery')
 const tasksPageContainer = document.getElementById('tasksPageContainer')
-const user_notes = document.getElementById('user_notes')
+const item_notes = document.getElementById('item_notes')
+
 const taskTemplate = document.getElementById('taskListTemplate')
 
 
@@ -169,6 +174,7 @@ function openItemPage(data){
     item_condition.textContent = data['item']['condition']
     item_quantity.textContent = data['item']['quantity']
     item_upholstery.textContent = data['item']['upholstery']
+    item_notes.textContent = data['item']['notes']
 
     tasksPageContainer.innerHTML = ''
     data['tasks'].forEach((task,task_index)=>{

@@ -1,4 +1,4 @@
-from taskTrakerAppV1.models import Items_Sections, Tasks_Items,Sections
+from taskTrakerAppV1.models import Items_Sections, Tasks_Items,Sections, Items
 from taskTrakerAppV1 import db
 from datetime import datetime, timezone
 
@@ -50,3 +50,28 @@ def record_action_time(data):
             query_item_section.is_visible = False
 
         db.session.commit()
+
+section_list = ['Dismantler','Cleaner','Upholstery Remover', 'Foam Installer','Upholstery Installer','Wood Frame Fixer','Remontering','Photography' ]
+def add_items_db(data):
+
+    new_item = Items(**data['item'])
+
+    db.session.add(new_item)
+    
+    for section in data['selected_sections']:
+        section_query = Sections.query.filter(Sections.section_name == section).first()
+        
+        assignment = Items_Sections(item=new_item,section=section_query)
+        if len(data['selected_sections']) < len(section_list):
+            assignment.is_visible = True
+        elif section == 'Dismantler':
+            assignment.is_visible = True
+        db.session.add(assignment)
+
+        for task in section_query.tasks:
+            tasks_items = Tasks_Items( item=new_item, task=task )
+            db.session.add(tasks_items)
+    
+    db.session.commit()
+
+    return 'ok'

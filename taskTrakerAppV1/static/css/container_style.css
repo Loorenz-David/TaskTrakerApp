@@ -86,13 +86,14 @@
 
 .custom-checkbox .checkmark{
     height: 25px;
-    width: 25px;
+    width: 25px;    
     background-color: white;
     border: 2px solid #ccc;
     border-radius: 50%; /* Makes it a circle */
     transition: 0.2s;
     position: relative;
 }
+
 
 .custom-checkbox input:checked + .checkmark {
     background-color: green;
@@ -111,6 +112,7 @@
 }
 
 
+
 .footer-page{
     position: relative;
     bottom: 0;
@@ -119,6 +121,7 @@
     background-color: white;
     height: 60px;
     padding: 10px;
+  
 }
 textarea{
     width: 100%;

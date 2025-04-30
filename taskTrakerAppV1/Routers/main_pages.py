@@ -3,7 +3,7 @@ from flask import render_template, request, jsonify, redirect, flash, url_for
 from flask_login import login_user,logout_user, login_required, current_user
 from taskTrakerAppV1.models import Users
 from taskTrakerAppV1.Functions.query_items import query_items
-from taskTrakerAppV1.Functions.user_actions import change_task_estate, record_action_time
+from taskTrakerAppV1.Functions.user_actions import change_task_estate, record_action_time, add_items_db
 
 
 @main.route('/', methods=['POST','GET'])
@@ -21,9 +21,25 @@ def login_router():
 @main.route('/add_item', methods=['POST','GET'])
 @login_required
 def add_item():
-    print('addd')
+    
     return render_template('add_item.html')
 
+
+@main.route('/main/jsserving/adding_item', methods=['POST'])
+@login_required
+def adding_item():
+    response = {'message':'something went wrong','status':200}
+    
+    data = request.json
+
+    if data:
+        items = add_items_db(data)
+        if items == 'ok':
+            response = {'message':'Item added','status':200}
+
+
+
+    return jsonify(response)
 
 
 @main.route('/main/jsserving/login', methods=['POST'])
@@ -63,6 +79,8 @@ def get_items():
         items_found = query_items(data)
 
         response['data'] = items_found
+
+        
 
     return jsonify(response)
 

@@ -47,7 +47,7 @@ def query_items(data):
                        'quantity':row.item.quantity,
                        'condition':row.item.condition,
                        'item_type':row.item.item_type,
-                      
+                       'notes':row.item.notes
                        },
             'tasks':tasks
         }

@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from .task_dict import task_list
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -25,26 +26,24 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-        section_list = ['Dismantler','Cleaner','Upholstery remover']
-        task_list = [{'section':'Dismantler', 'tasks': [
-                                                        {'task_name':'Quantity check','task_description':'the quantity of items matches the specify quantity'},
-                                                        {'task_name':'Article number check','task_description':'The chairs has the correct article number'},
-                                                        {'task_name':'Chairs are Dismantle','task_description':'The chairs have been dismantle'}
-                                                        ]},
-                     {'section':'Cleaner', 'tasks': [
-                                                        {'task_name':'items are placed','task_description':'The items have been placed on assign postion '},
-                                                        {'task_name':'Article number check','task_description':'The chairs has the correct article number'},
-                                                        {'task_name':'The chairs are washed','task_description':'The chairs are washed'}
-                                                        ]},
-                                                        ]
+        section_list = ['Dismantler','Cleaner','Upholstery Remover', 'Foam Installer','Upholstery Installer','Wood Frame Fixer','Remontering', 'Photography']
         
+        
+        special_section = 'Wood Frame Fixer'
+        special_order = 3
         order_section_indx = 1
         for section in section_list:
             query_section = Sections.query.filter_by(section_name=section).first()
+            
             if not query_section:
-                new_section = Sections(section_name=section,section_order_indx=order_section_indx)
+                if section == special_section:
+                    new_section = Sections(section_name=section,section_order_indx=special_order)
+                else:
+                    new_section = Sections(section_name=section,section_order_indx=order_section_indx)
+                    order_section_indx += 1
+                
                 db.session.add(new_section)
-                order_section_indx += 1
+                db.session.commit()
 
         create_task = False
         if create_task:
@@ -86,12 +85,12 @@ def create_app():
 
         create_user_test = False
         if create_user_test:
-            account = Users(username='Roma',password='Roma', sections=['Upholstery instalation','Dismantler','Cleaner'],role='Worker')
+            account = Users(username='Vitaliy',password='Vitaly', sections=['Photography'],role='Worker')
             db.session.add(account)
             db.session.commit()
 
-        # change = Users.query.get(2)
-        # change.sections = ['Upholstery remover','Dismantler','Cleaner']
+        # change = Users.query.get(4)
+        # change.password = 'Nazar'
         # db.session.commit()
     
         

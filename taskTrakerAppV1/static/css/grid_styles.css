@@ -1,6 +1,9 @@
 .items-center{
     align-items: center;
 }
+.items-start{
+    align-items: start !important; 
+}
 .justify-center{
     justify-content: center;
 }
@@ -53,6 +56,9 @@
 
 .padding-2{
     padding: 20px !important;
+}
+.padding-top-1{
+    padding-top:10px;
 }
 
 .padding-top-2{

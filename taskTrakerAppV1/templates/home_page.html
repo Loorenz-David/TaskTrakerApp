@@ -3,7 +3,7 @@
 
 
 {% block stylesheet %}
-
+<link rel="stylesheet" href="{{url_for('static', filename='css/input_styles.css')}}">
 
 {% endblock %}
 
@@ -42,17 +42,16 @@
             </div>
             
         </div>
+        <div class="flex-row  padding-2">
+            <div class="flex-column gap-05">
+                <span class=" subheader-1 text-dark-grey">Item notes</span>
+                <span class=" text text-dark-grey" id="item_notes"></span>
+            </div>
+        </div>
         <div class="flex-column  gap-2 padding-2 flex-1 tasks-container margin-top-2" id="tasksPageContainer">
             
         </div>
-        <div class="flex-column gap-1 padding-2">
-            <div class="flex-row justify-start">
-                <span class="subheader-1 text-dark-grey">Notes:</span>
-            </div>
-            <div class="flex-row">
-                <textarea id="user_notes"></textarea>
-            </div>
-        </div>
+       
         
         <div class="flex-row footer-page">
             <div class="btn bg-green padding-2" id="startBtn">
@@ -102,7 +101,7 @@
     <div class="flex-row items-center gap-1 justify-start  task-element">
         <label class="custom-checkbox">
             <input type="checkbox" >
-            <span class="checkmark"></span>
+            <span class="checkmark "></span>
         </label>
         <span data-value="item_task" class="text-17 text-dark-grey"></span>
     </div>
@@ -112,6 +111,11 @@
 {% endblock %}
 
 {% block js %}
+
+
+<script src="{{url_for('static' , filename='js/request_handler.js')}}"></script>
+<script src="{{url_for('static', filename='js/handle_section_selection.js')}}"></script>
+
 
 <script>
     const userSections = {{ user_sections | tojson}}
@@ -131,6 +135,11 @@
         
 
     })
+
+    if(userSections.length < 7 && userSections.length > 0){
+        console.log(userSections)
+        setPageForSelection(userSections[0],false)
+    }
     
     if(userRole == 'admin'){
         
@@ -141,9 +150,5 @@
         addItemBtn.style.display = 'none'
     }
 </script>
-
-<script src="{{url_for('static' , filename='js/request_handler.js')}}"></script>
-<script src="{{url_for('static', filename='js/handle_section_selection.js')}}"></script>
-
 
 {% endblock %}

@@ -18,10 +18,20 @@
 .text-dark-grey{
     color: rgb(147, 147, 147);
 }
+.text-blue{
+    color: rgb(48, 19, 129);
+}
+.text-red{
+    color: rgb(181, 2, 2);
+}
 
 .text{
     font-size: 13px;
 }
 .text-17{
     font-size: 17px;
+}
+
+.no-wrap{
+    white-space: nowrap !important;
 }
