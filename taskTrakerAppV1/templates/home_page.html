@@ -112,34 +112,29 @@
 
 {% block js %}
 
-
-<script src="{{url_for('static' , filename='js/request_handler.js')}}"></script>
-<script src="{{url_for('static', filename='js/handle_section_selection.js')}}"></script>
-
-
 <script>
-    const userSections = {{ user_sections | tojson}}
-    const userRole = "{{ user_role | safe }}"
-    const ulSections = document.getElementById('ulSections')
+    let userSections = {{ user_sections | tojson}}
+    let userRole = "{{ user_role | safe }}"
+    let ulSections = document.getElementById('ulSections')
     let addItemBtn = document.getElementById('addItemBtn')
     
     userSections.forEach((section)=>{ 
         let liSection = document.createElement('li')
         let span = document.createElement('span')
-
+        // span.setAttribute('role','button')
+        // span.style.userSelect = 'none'
+        // span.style.cursor = 'pointer'
+        span.textContent = section
         liSection.appendChild(span)
 
-        span.textContent = section
+        
 
         ulSections.appendChild(liSection)
         
 
     })
 
-    if(userSections.length < 7 && userSections.length > 0){
-        console.log(userSections)
-        setPageForSelection(userSections[0],false)
-    }
+    
     
     if(userRole == 'admin'){
         
@@ -148,6 +143,18 @@
     }
     else{
         addItemBtn.style.display = 'none'
+    }
+</script>
+
+<script src="{{url_for('static' , filename='js/request_handler.js')}}"></script>
+<script src="{{url_for('static', filename='js/handle_section_selection.js')}}"></script>
+
+
+
+<script>
+    if(userSections.length < 7 && userSections.length > 0){
+        console.log(userSections)
+        setPageForSelection(userSections[0],false)
     }
 </script>
 

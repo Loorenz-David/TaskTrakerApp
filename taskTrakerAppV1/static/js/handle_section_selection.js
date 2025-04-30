@@ -90,7 +90,9 @@ queryInput.addEventListener('input',(e)=>{
 
 sectionList.forEach((section)=>{
     section.addEventListener('click',(e)=>{
+        
         let selection = e.currentTarget.querySelector('span').textContent
+        console.log(selection)
         setPageForSelection(selection)
     })
 })
