@@ -60,3 +60,11 @@
 .select-sections:focus{
     outline:none
 }
+
+.notification-counter{
+    background-color: rgb(54, 88, 54);
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    
+}

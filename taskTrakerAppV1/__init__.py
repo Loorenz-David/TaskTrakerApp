@@ -9,7 +9,7 @@ login_manager = LoginManager()
 def create_app():
     app = Flask(__name__)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///track_app_db.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db_04_30.db' #default path should be track_app_db.db
     app.config['SECRET_KEY'] = "secrete app key" 
     
 

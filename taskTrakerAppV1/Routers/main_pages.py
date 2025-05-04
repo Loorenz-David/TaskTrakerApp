@@ -28,15 +28,17 @@ def add_item():
 @main.route('/main/jsserving/adding_item', methods=['POST'])
 @login_required
 def adding_item():
-    response = {'message':'something went wrong','status':200}
+    response = {'message':'something went wrong, check console log','status':'alert'}
     
     data = request.json
 
     if data:
-        items = add_items_db(data)
-        if items == 'ok':
-            response = {'message':'Item added','status':200}
-
+        try:
+            items = add_items_db(data)
+            if items == 'ok':
+                response = {'message':'Item added','status':'confirmation'}
+        except Exception as message:
+            response = {'message':'Item not added, check console','status':'error'}
 
 
     return jsonify(response)
@@ -86,15 +88,24 @@ def get_items():
 
 @main.route('/main/jsserving/userAction', methods=['POST'])
 def userAction():
-    response = {'status':200,'message':'No Items'}
+    response = {'status':'alert','message':'something went wrong, try closing and opening the app.'}
 
     data = request.json
-    
-    if data.get('type') == 'task':
-        change_state = change_task_estate(data)
-        response['message'] = change_state
-    elif data.get('type') == 'set_time':
-        record_action_time(data)
+    try:
+        
+        if data.get('type') == 'task':
+            change_state = change_task_estate(data)
+            response['message'] = change_state
+        elif data.get('type') == 'set_time':
+            record_time = record_action_time(data)
+            print(record_time,'-----------')
+            if data['value'] == 'end_time':
+                response['message'] = 'Item completed!'
+                response['status'] = 'confirmation'
+    except Exception as message:
+        print(message)
+        response['message'] = 'something went wrong, contact a surpervisor.'
+        response['status'] = 'error'
 
     
 

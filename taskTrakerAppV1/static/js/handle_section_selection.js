@@ -3,6 +3,7 @@ let sectionList = ulSections.querySelectorAll('li')
 let itemsList = document.getElementById('containerItemsList')
 let itemsData;
 
+
 const trolleyTemplate = document.getElementById('trolleyContainer')
 const itemTemplate = document.getElementById('itemElement')
 function loadItemsDataList(dataDictList){
@@ -17,7 +18,7 @@ function loadItemsDataList(dataDictList){
             let itemClone = itemTemplate.content.cloneNode(true)
             itemClone.querySelector("[data-value='article_number']").textContent = item['item']['article_number']
             let itemContainer = itemClone.querySelector('.itemElement')
-            itemContainer.setAttribute('data-id',`${key}_${index}`)
+            itemContainer.setAttribute('data-id',`${item['id']}`)
             if(item['start_time'] ){
                 add_start_item_list(itemContainer)
             }
@@ -116,22 +117,35 @@ async function setPageForSelection(selectedSection,toggleMenu=true){
     console.log(selectedSection)
 }
 
-let trolley;
-let dataIndx;
+
+let selectedId;
 let taskIndx;
+let selectedElement;
+let selectedData;
+
 
 
 
 itemsList.addEventListener('click',(event)=>{
     const clickedItem = event.target.closest('.itemElement')
     if(clickedItem){
+    
         const id = clickedItem.dataset.id
-        const splitId = id.split('_')
-        trolley = splitId[0]
-        dataIndx = parseInt(splitId[1])
-        const selectedData = itemsData[trolley][dataIndx]
-        openItemPage(selectedData)
-    }
+        selectedId = parseInt(id)
+        for(let trolley in itemsData){
+            const match = itemsData[trolley].findIndex(item => item.id === selectedId)
+            console.log(match)
+            if (match !== -1){
+                selectedData = {'trolley':trolley,'index':match,'selectedData':itemsData[trolley][match]}
+            }
+            }
+            selectedElement= clickedItem
+            console.log(selectedData,'ttt')
+            openItemPage(selectedData['selectedData'])
+        }
+        
+        
+    
 })
 
 
@@ -140,6 +154,7 @@ itemsList.addEventListener('click',(event)=>{
 const page = document.querySelector('.full-page')
 const closeBtn = document.getElementById('closePageBtn')
 const startBtn = document.getElementById('startBtn')
+const containerStartBtn = startBtn.parentElement
 const finishBtn = document.getElementById('finishBtn')
 
 const item_article_number = document.getElementById('item_article_number')
@@ -155,12 +170,14 @@ const taskTemplate = document.getElementById('taskListTemplate')
 
 function checkForStartTime(){
 
-    if(itemsData[trolley][dataIndx]['start_time']){
-        startBtn.style.display = 'none'
+    if(selectedData['selectedData']['start_time']){
+        containerStartBtn.style.display = 'none'
+        tasksPageContainer.style.display = 'flex'
         finishBtn.style.display ='flex'
     }
     else{
-        startBtn.style.display = 'flex'
+        tasksPageContainer.style.display = 'none'
+        containerStartBtn.style.display = 'flex'
         finishBtn.style.display ='none'
     }
 }
@@ -193,10 +210,6 @@ function openItemPage(data){
         }
     })
 
-    if (data['start_time']){
-        startBtn.style.display = 'none'
-        finishBtn.style.display = 'flex'
-    }
 
     check_task_completion()
    
@@ -226,20 +239,28 @@ function closePage(){
 
 let are_tasks_checked;
 
-function finishBtnAction(){
+async function finishBtnAction(){
     let checkBoxList = tasksPageContainer.querySelectorAll('input')
 
     if (are_tasks_checked){
-        finishBtn.style.display = 'none'
-        
-        startBtn.style.display = 'flex'
-        let fetchDict = {'type':'set_time','id':itemsData[trolley][dataIndx]['id'], 'value':'end_time'}
-        handleUserAction(fetchDict)
-        let itemToRemove  = itemsList.querySelector(`[data-id= "${trolley}_${dataIndx}"]`)
-        if(itemToRemove){
-            itemToRemove.remove()
+        let fetchDict = {'type':'set_time','id':selectedData['selectedData']['id'], 'value':'end_time'}
+        let response = await handleUserAction(fetchDict)
+        if(response){
+            if(response['status'] == 'confirmation'){
+                const trolley = selectedData['trolley']
+                const index = selectedData['index']
+                itemsData[trolley].splice(index,1)
+                if(itemsData[trolley].length === 0){
+                    delete itemsData[trolley]
+                }
+                selectedElement.remove()
+            
+            closePage()
+            }else{
+                console.log(response)
+            }
         }
-        closePage()
+        
         
     }
 
@@ -250,13 +271,15 @@ function finishBtnAction(){
 
 function startBtnAction(){
 
-    itemsData[trolley][dataIndx]['start_time'] = new Date()
+    selectedData['selectedData']['start_time'] = new Date()
 
     checkForStartTime()
 
     check_task_completion()
 
-    let fetchDict = {'type':'set_time','id':itemsData[trolley][dataIndx]['id'],'value':'start_time'}
+    add_start_item_list(selectedElement)
+
+    let fetchDict = {'type':'set_time','id':selectedData['selectedData']['id'],'value':'start_time'}
 
     handleUserAction(fetchDict)
 
@@ -286,7 +309,7 @@ tasksPageContainer.addEventListener('click',(e)=>{
         
     
         fetchDict = {'type':'task', 
-                    'task_id':itemsData[trolley][dataIndx]['tasks'][taskIndx]['task_id'],
+                    'task_id':selectedData['selectedData']['tasks'][taskIndx]['task_id'],
                     'value':selectedTask.checked
         }
         handleUserAction(fetchDict)
@@ -296,12 +319,16 @@ tasksPageContainer.addEventListener('click',(e)=>{
 
 async function handleUserAction(fetchDict){
     let response = await request_handler('main','userAction',fetchDict)
-    if( response['status'] == 200){
+    if( response ){
         if(fetchDict['type'] == 'task'){
-            itemsData[trolley][dataIndx]['tasks'][taskIndx]['is_completed'] = fetchDict['value']
+            selectedData['selectedData']['tasks'][taskIndx]['is_completed'] = fetchDict['value']
             check_task_completion()
         }
-        
+        else if (fetchDict['value'] == 'end_time'){
+            console.log('enddd')
+            fetch_message(response)
+        }
     }
+    return response
 }
 

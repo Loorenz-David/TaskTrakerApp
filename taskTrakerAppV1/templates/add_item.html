@@ -16,7 +16,16 @@
     <div class="flex-row">
         <div class="flex-column">
             <input data-value="trolley"  type="text" class="input-underline input-center input-width-100" >
-            <span class="padding-top-1 text">Trolley</span>
+            <div class="flex-row gap-1  padding-top-1">
+                <div class="flex-column justify-center">
+                    <span class="text">Wagon</span>
+                </div>
+                <div class="flex-column justify-center notification-counter">
+                    <span style="color: white; font-size: 10px;" id="itemCounter">0</span>
+                </div>
+            </div>
+
+            
         </div>
     </div>
     <div class="flex-column   padding-top-4">
@@ -56,7 +65,7 @@
        <div class="flex-row input-row">
         <div class="flex-column gap-1 flex-1 items-start padding-top-1 ">
             <span class=" text-dark-grey">Item type</span>
-            <select data-value="condition"  class="select-sections" data-value="item_type" style="border: none !important; font-size: 15px !important; margin-bottom: 10px !important;">
+            <select data-value="item_type"  class="select-sections" data-value="item_type" style="border: none !important; font-size: 15px !important; margin-bottom: 10px !important;">
                 <option value="Dining chair">Dining chair</option>
                 <option value="Arm chair">Arm chair</option>
                 <option value="Stol">Stol</option>
@@ -125,7 +134,7 @@
 {% endblock %}
 
 {% block js %}
-<script src="{{url_for('static' , filename='js/request_handler.js')}}"></script>
+
 <script src="{{url_for('static', filename='js/adding_item.js')}}"></script>
 <script>
     hamburgerBtn.style.display = 'none'

@@ -28,15 +28,37 @@ def record_action_time(data):
             duration = set_time - start_time
             query_item_section.total_duration = int(duration.total_seconds())
             query_item_section.is_completed = True
+            query_item_section.is_visible = False
 
-            next_section = query_item_section.section.section_order_indx + 1
+            next_addition = 1
+            if query_item_section.section.section_name == 'Wood Frame Fixer':
+                next_addition = 3
+
+            next_section = query_item_section.section.section_order_indx + next_addition
             query_section = Items_Sections.query.join(Sections).filter(
                                                                         Items_Sections.item_id == query_item_section.item_id,
                                                                         Sections.section_order_indx == next_section
                                                                     ).all()
             if query_section:
                 for section in query_section:
+                    
+                    if section.section.section_name == 'Remontering':
+                       
+                        join_query =  Items_Sections.query.join(Sections)
+                        query_wood_worker = join_query.filter(Items_Sections.item_id == query_item_section.item_id,
+                                                            Sections.section_name == 'Wood Frame Fixer').first()
+                        query_upholstery_installer =  join_query.filter(Items_Sections.item_id == query_item_section.item_id,
+                                                                        Sections.section_name == 'Upholstery Installer').first()
+                        if not query_wood_worker.is_completed :
+                            db.session.commit()
+                            return "Wood Frame Fixer haven't finished with the chair frame."
+
+                        if not query_upholstery_installer.is_completed :
+                            db.session.commit()
+                            return "Upholstery Installer haven't finished Uplholstering."
+
                     section.is_visible = True
+
             else:
                 start_time_item = query_item_section.item.start_time
                 if start_time_item.tzinfo is None:
@@ -47,7 +69,7 @@ def record_action_time(data):
                 duration_item = set_time - start_time_item
                 query_item_section.item.total_duration = int(duration_item.total_seconds())
 
-            query_item_section.is_visible = False
+            
 
         db.session.commit()
 

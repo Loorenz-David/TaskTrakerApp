@@ -69,8 +69,9 @@
 .tasks-container{
     border: 0.5px solid gray;
     max-height: 400px !important;
-    min-width: 200px !important;
+    min-width: 300px !important;
     overflow-y: auto;
+    display: none ;
 }
 
 
@@ -145,3 +146,4 @@ textarea{
     font-size:12px;
 
 }
+

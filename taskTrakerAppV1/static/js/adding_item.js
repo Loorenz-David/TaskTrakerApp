@@ -2,10 +2,12 @@ const itemInputs = document.querySelectorAll("[data-value]")
 const itemSections = document.querySelectorAll('[data-value-checkbox]')
 
 const addItemBtn = document.getElementById('addItemDbBtn')
-
+const itemCounter = document.getElementById('itemCounter')
+let itemsCount = 0
 addItemBtn.addEventListener('click',async (e)=>{
     let isItemValid = true
-    console.log(11)
+
+    
 
     let itemDict = {'selected_sections':[], 'item':{}}
 
@@ -30,15 +32,21 @@ addItemBtn.addEventListener('click',async (e)=>{
 
     if(isItemValid){
         
-        let response = await request_handler('main','adding_item',itemDict)
-        console.log(response)
-        if(response['message'] == 'Item added'){
-           
-            window.location.herf = '/add_item'
+        let response = await request_handler('main','adding_item',itemDict,{'fetch_message':undefined})
+        if(response){
+            const itemInputsArray = Array.from(itemInputs)
+
+            if(response.status == 'confirmation'){
+                let quantityInput = itemInputsArray.find(el => el.getAttribute('data-value') == 'quantity')
+                itemsCount += parseInt(quantityInput.value)
+                itemCounter.textContent = itemsCount
+                quantityInput.value = ''
+                itemInputsArray.find(el => el.getAttribute('data-value') == 'upholstery').value = ''
+                
+            }
         }
-        else{
-            alert('something went wrong')
-        }
+
+        
     }
 
 })
