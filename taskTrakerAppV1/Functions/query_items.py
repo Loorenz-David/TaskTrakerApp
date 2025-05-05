@@ -1,5 +1,6 @@
-from taskTrakerAppV1.models import Items_Sections, Sections
+from taskTrakerAppV1.models import Items_Sections, Sections, Items
 from taskTrakerAppV1 import db
+from datetime import datetime, timedelta
 
 def query_items(data):
     query_items = Items_Sections.query
@@ -56,3 +57,61 @@ def query_items(data):
 
     return results
 
+
+def query_stats(data):
+
+    results = {}
+
+    dateFrom_to_query = datetime.strptime(data['date_from'],"%Y-%m-%d")
+    if not data.get('date_to'):
+        dateTo_to_query = dateFrom_to_query + timedelta(days=1)
+    else:
+        dateTo_to_query = datetime.strptime(data['datae_to'],'%Y-%m-%d')
+
+
+   
+    query = Items_Sections.query
+
+ 
+
+    for section in data['sections']:
+
+        
+        activeItems_ls = []
+        completed_items = []
+
+        query_section = query.join(Items_Sections.section).join(Items_Sections.item).filter(
+            Sections.section_name== section,
+            Items.is_completed == False,
+            )
+        
+        activeItems_ls = query_section.all()
+
+        completed_items_query = query_section.filter(Items_Sections.end_time >= dateFrom_to_query,
+                                                    Items_Sections.end_time < dateTo_to_query,
+                                                    Items_Sections.is_completed == True)
+        
+        completed_items = completed_items_query.all()
+
+        results[section] = {'total_active_items':0}
+        for item in activeItems_ls:
+            results[section]['total_active_items'] += int(item.item.quantity)
+
+        total_time = 0
+        results[section]['completed_items'] = 0
+        for item in completed_items:
+            results[section]['completed_items'] += int(item.item.quantity)
+            total_time += int(item.total_duration)
+
+        print(total_time)
+        if total_time > 0 :
+            results[section]['average_time_seconds'] = total_time // results[section]['completed_items']
+        else:
+            results[section]['average_time_seconds'] = 0
+        print(results)
+
+
+
+
+
+    return results

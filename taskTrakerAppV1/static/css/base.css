@@ -74,3 +74,7 @@ a{
     width: 25px;
     height: 25px;
 }
+.svg-black{
+    fill:black !important;
+    stroke: black !important;
+}

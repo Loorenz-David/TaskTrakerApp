@@ -2,7 +2,7 @@ from . import main
 from flask import render_template, request, jsonify, redirect, flash, url_for
 from flask_login import login_user,logout_user, login_required, current_user
 from taskTrakerAppV1.models import Users
-from taskTrakerAppV1.Functions.query_items import query_items
+from taskTrakerAppV1.Functions.query_items import query_items, query_stats
 from taskTrakerAppV1.Functions.user_actions import change_task_estate, record_action_time, add_items_db
 
 
@@ -23,6 +23,15 @@ def login_router():
 def add_item():
     
     return render_template('add_item.html')
+
+
+@main.route('/admin_panel', methods=['POST','GET'])
+@login_required
+def admin_panel():
+    
+    return render_template('admin_panel.html')
+
+
 
 
 @main.route('/main/jsserving/adding_item', methods=['POST'])
@@ -110,3 +119,27 @@ def userAction():
     
 
     return response 
+
+
+@main.route('/main/jsserving/get_stats', methods=['GET','POST'])
+def get_stats():
+
+    data = request.json
+    response = {'status':'alert','message':'No query'}
+
+    if data:
+        try:
+            section_stats = query_stats(data)
+
+            response['data'] = section_stats
+
+            response['status'] = 'confirmation'
+            response['message'] = 'Data aquired !'
+        except Exception as e:
+            response['status'] = 'error'
+            response['message'] = 'error, check console'
+            response['error_message'] = str(e)
+
+        
+
+    return jsonify(response)
