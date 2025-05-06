@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work task</title>
+
+
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#2196f3">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/hamburger_menu.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/container_style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/grid_styles.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/colors.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/text_styles.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/btn_styles.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bg_styles.css')}}">
+    {% block stylesheet %}
+
+    {% endblock %}
+
+</head>
+<body>
+  <div class="fetch-message-box " id="fetchMessageBox">
+    <div class="flex-row gap-1 items-center">
+      <div class="flex-column" id="fetch-message-icon-container">
+        <svg svg-id="confirmationSvg" class="svg-25" style="display:none;" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="m16 0c8.836556 0 16 7.163444 16 16s-7.163444 16-16 16-16-7.163444-16-16 7.163444-16 16-16zm6.4350288 11.7071068c-.3905242-.3905243-1.0236892-.3905243-1.4142135 0l-6.3646682 6.3632539-3.5348268-3.5348268c-.3905242-.3905243-1.0236892-.3905243-1.41421352 0-.39052429.3905243-.39052429 1.0236893 0 1.4142136l4.24264072 4.2426407c.3905243.3905242 1.0236892.3905242 1.4142135 0 .0040531-.0040531.0080641-.0081323.012033-.0122371l7.0590348-7.0588308c.3905243-.3905242.3905243-1.0236892 0-1.4142135z" fill="#00a832" fill-rule="evenodd"></path></g></svg>
+        <svg svg-id="errorSvg" style="width:30px;height:30px; display:none;" fill="#d10000" viewBox="-1.7 0 20.4 20.4" xmlns="http://www.w3.org/2000/svg" class="cf-icon-svg" stroke="#d10000" stroke-width="0.0612"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M16.417 10.283A7.917 7.917 0 1 1 8.5 2.366a7.916 7.916 0 0 1 7.917 7.917zm-6.804.01 3.032-3.033a.792.792 0 0 0-1.12-1.12L8.494 9.173 5.46 6.14a.792.792 0 0 0-1.12 1.12l3.034 3.033-3.033 3.033a.792.792 0 0 0 1.12 1.119l3.032-3.033 3.033 3.033a.792.792 0 0 0 1.12-1.12z"></path></g></svg>
+        <svg svg-id="alertSvg" style="width:30px;height:30px; display:none;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <rect width="24" height="24" fill="white"></rect> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM11 13C11 13.5523 11.4477 14 12 14C12.5523 14 13 13.5523 13 13V8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8V13ZM13 15.9888C13 15.4365 12.5523 14.9888 12 14.9888C11.4477 14.9888 11 15.4365 11 15.9888V16C11 16.5523 11.4477 17 12 17C12.5523 17 13 16.5523 13 16V15.9888Z" fill="#bdd600"></path> </g></svg>
+      </div>
+      <div class="flex-column">
+        <span id="fetch-message-text"><span>
+      </div>
+    </div>
+  </div>
+  {% if current_user.is_authenticated %}
+  <div class="hamburger-btn" >
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    </div>
+    <div class="menu-page">
+      <div class="flex-row justify-end" style="display: none;" id="addItemBtn">
+        <div class="btn bg-white" style="width: 100px;">
+            <a style="text-decoration: none;" href="/add_item">Add item</a>
+        </div>
+      </div>
+    
+        <ul id="ulSections">
+        </ul>
+
+        {% if current_user.role == 'admin' %}
+        <div class="flex-row justify-end gap-2 items-center"  id="adminPanelBtn">
+              <a style="text-decoration: none; color: white; font-size:20px;" href="/admin_panel">Admin panel</a>
+              <svg fill="#ffffff" style="width:30px;height:30px;" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 294 294" xml:space="preserve" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M279,250H15c-8.284,0-15,6.716-15,15s6.716,15,15,15h264c8.284,0,15-6.716,15-15S287.284,250,279,250z"></path> <path d="M30.5,228h47c5.247,0,9.5-4.253,9.5-9.5v-130c0-5.247-4.253-9.5-9.5-9.5h-47c-5.247,0-9.5,4.253-9.5,9.5v130 C21,223.747,25.253,228,30.5,228z"></path> <path d="M123.5,228h47c5.247,0,9.5-4.253,9.5-9.5v-195c0-5.247-4.253-9.5-9.5-9.5h-47c-5.247,0-9.5,4.253-9.5,9.5v195 C114,223.747,118.253,228,123.5,228z"></path> <path d="M216.5,228h47c5.247,0,9.5-4.253,9.5-9.5v-105c0-5.247-4.253-9.5-9.5-9.5h-47c-5.247,0-9.5,4.253-9.5,9.5v105 C207,223.747,211.253,228,216.5,228z"></path> </g> </g></svg>
+        </div>
+        {% endif %}
+        
+        <div class=" flex-row justify-start margin-push-down">
+          <div class="logout">
+            <a href="/main/jsserving/logout" >Logout</a>
+          </div>
+          
+        </div>
+    </div>
+
+  
+  
+        
+    
+  {% endif %}
+
+   
+
+    {% block content %}
+    {% endblock%}
+    <script src="{{url_for('static' , filename='js/menu_interactions.js')}}"></script>
+    <script src="{{url_for('static' , filename='js/message_handler.js')}}"></script>
+    <script src="{{url_for('static' , filename='js/request_handler.js')}}"></script>
+    {% block js %}
+    {% endblock%}
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}")
+          .then(() => console.log("Service Worker Registered"));
+      }
+    </script>
+
+</body>
+</html>
+

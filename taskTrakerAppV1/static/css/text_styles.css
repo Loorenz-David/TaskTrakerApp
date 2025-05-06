@@ -1,0 +1,40 @@
+.header-10{
+    font-size:25px;
+    font-weight:600;
+}
+
+.header-1{
+    font-size:10px;
+    font-weight:600;
+}
+.subheader-1{
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.text-grey{
+    color: rgb(172, 172, 172);
+}
+.text-dark-grey{
+    color: rgb(147, 147, 147);
+}
+.text-blue{
+    color: rgb(48, 19, 129);
+}
+.text-red{
+    color: rgb(181, 2, 2);
+}
+
+.text{
+    font-size: 13px;
+}
+.text-17{
+    font-size: 17px;
+}
+.text-20{
+    font-size: 20px;
+}
+
+.no-wrap{
+    white-space: nowrap !important;
+}
