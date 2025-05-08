@@ -25,13 +25,7 @@ def create_app():
     from .models import Sections, Items, Items_Sections, Tasks, Tasks_Items,Users
     with app.app_context():
         # db.create_all()
-
-        # section_changes = Users.query.get(3)
-        # section_changes.sections = ['Cleaner','Dismantler']
-
-        # section_changes.section_order_indx = 2
-        # db.session.commit()
-
+       
 
         section_list = ['Dismantler','Cleaner','Upholstery Remover', 'Foam Installer','Upholstery Installer','Wood Frame Fixer','Remontering', 'Photography']
         

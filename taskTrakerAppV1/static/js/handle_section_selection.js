@@ -100,6 +100,8 @@ sectionList.forEach((section)=>{
 
 async function setPageForSelection(selectedSection,toggleMenu=true){
     itemsList.innerHTML = ''
+    
+    queryInput.placeholder = `Search item in ${selectedSection}... `
 
     if(toggleMenu){
         toogle_hamburger_btn()
