@@ -11,5 +11,15 @@
     background-color: rgb(126, 126, 126);
 }
 .bg-white{
-    background-color: white;
+    background-color: white !important;
 }
+.bg-blue{
+    background-color: rgb(102, 102, 243) !important;
+}
+.bg-transparent-dark{
+    background-color: rgba(0, 0, 0, 0.232);
+}
+.bg-blur{
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.336); /* Optional for frosted effect */
+  }

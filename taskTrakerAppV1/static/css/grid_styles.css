@@ -4,6 +4,7 @@
 .items-start{
     align-items: start !important; 
 }
+
 .justify-center{
     justify-content: center;
 }
@@ -16,6 +17,10 @@
 .space-around{
     justify-content: space-around !important;
 }
+.space-between{
+    justify-content: space-between !important;
+}
+
 
 .flex-row{
     display: flex;
@@ -32,7 +37,7 @@
 }
 
 .flex-1{
-    flex:1;
+    flex:1 !important;
 }
 
 

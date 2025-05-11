@@ -1,3 +1,8 @@
+
+.header-30{
+    font-size:30px;
+    font-weight:600;
+}
 .header-10{
     font-size:25px;
     font-weight:600;
@@ -23,6 +28,9 @@
 }
 .text-red{
     color: rgb(181, 2, 2);
+}
+.text-white{
+    color: rgb(255, 255, 255);
 }
 
 .text{

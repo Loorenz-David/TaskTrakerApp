@@ -9,8 +9,61 @@
 
 {% block content %}
 
+
 <main >
-    <div class="full-page ">
+    <div class="full-page bg-blur" id="pausePopup" style=" align-items: center; justify-content: center; z-index: 100;" >
+        <div class="popupContainer gap-5">
+            <div class="flex-row justify-end">
+                <div class="closeItem" id="closePausingPopupBtn" style="padding: 0 !important;">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+            <div class="flex-column  gap-05 items-start">
+                <div class="flex-row flex-1">
+                    <div class="flex-column gap-2" id="pauseSelectContainer">
+                        <div class="flex-column flex-1 gap-05 items-start" style="width: 100%;">
+                            <span class="text text-dark-grey">Reason</span>
+                            <div class="flex-row">
+                                <select class="select-sections" id="reasonForPause" style="width: 100%; font-size: 20px !important; border: 0.5px solid grey !important; padding: 5px 10px;">
+                                    <option value=""></option>
+                                    <option value="finish work shift"> finish work shift</option>
+                                    <option value="item is incomplete">item is incomplete</option>
+                                    <option value="waiting for other section">wating for other section</option>
+                                    <option value="working with other item">working with other item</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex-column flex-1 gap-05 items-start" id="pauseDueToSectionContianer" style="width: 100%; display:none;">
+                            <span class="text text-dark-grey">Section</span>
+                            <div class="flex-row flex-1">
+                                <select class="select-sections" id="pauseSectionSelect" style="width: 100%; font-size: 20px !important; border: 0.5px solid grey !important; padding: 5px 10px;">
+                                    <option value=""></option>
+                                    <option value="Dismantler">Dismantler</option>
+                                    <option value="Cleaner">Cleaner</option>
+                                    <option value="Upholstery Remover">Upholstery Remover</option>
+                                    <option value="Foam Installer">Foam Installer</option>
+                                    <option value="Upholstery Installer">Upholstery Installer</option>
+                                    <option value="Remontering">Remontering</option>
+                                    <option value="Photography">Photography</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="flex-column">
+                <div class="btn bg-blue" id="submitPauseBtn">
+                    <span style="color: white;">Pause</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="full-page " id="itemPage">
         <div class="closeItem padding-bottom-3" id="closePageBtn">
             <div class="bar"></div>
             <div class="bar"></div>
@@ -59,15 +112,56 @@
        
         
         <div class="flex-row footer-page">
-            
-            <div class="btn bg-grey padding-2" style="display: none;" id="finishBtn">
-                <span style="color: white;">Finish</span>
+            <div class="flex-column gap-1 flex-1" >
+                <div class="btn bg-blue padding-2" style="display: none;" id="pauseBtn">
+                    <span style="color: white;">Pause</span>
+                </div>
+                <div class="btn bg-green padding-2" style="display: none;" id="continueBtn">
+                    <span style="color: white;">Continue</span>
+                </div>
+                <div class="btn bg-grey padding-2" style="display: none;" id="finishBtn">
+                    <span style="color: white;">Finish</span>
+                </div>
             </div>
+            
         </div>
     </div>
-    <div class="flex-row filter-container">
-        <input id="articleNumberInput" type="text" style="font-size: 20px !important;">
+    <div class="flex-column ">
+        <div class="flex-row filter-container items-center justify-start "  id="headerSelection">
+            <span id="sectionTitle" class="header-30 text-dark-grey"></span>   
+        </div>
+        <div class="flex-row padding-top-1">
+            <input id="articleNumberInput" type="text" style="font-size: 20px !important; padding:10px" placeholder="Search Item">
+        </div>
+        <div class="flex-column" style="width: 100%;">
+            <div class="flex-row input-row">
+                <div class="flex-column gap-05 padding-1"> 
+                    <span class="text text-dark-grey">Active</span>
+                    <span class="text-17" id="itemCountActive">0</span>
+                </div>
+                <div class="input-line-separator"></div>
+                <div class="flex-column gap-05 padding-1"> 
+                    <span class="text text-dark-grey">Started</span>
+                    <span class="text-17" id="itemCountStarted">0</span>
+                </div>
+                <div class="input-line-separator"></div>
+                <div class="flex-column gap-05 padding-1"> 
+                    <span class="text text-dark-grey">Pending</span>
+                    <span class="text-17" id="itemCountPaused">0</span>
+                </div>
+                <div class="input-line-separator"></div>
+                <div class="flex-column gap-05 padding-1"> 
+                    <span class="text text-dark-grey">Completed</span>
+                    <span class="text-17" id="itemCountCompleted">0</span>
+                </div>
+                
+    
+            </div>
+           
+        </div>
     </div>
+    
+   
     
     <div class="flex-column flex-1 itemList" style="overflow-x: hidden; overflow-y: auto;" id="containerItemsList">
         
@@ -132,6 +226,18 @@
     <svg id-value="Dismantler" style="height:30px;width:30px" viewBox="-0.5 0 65 65" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>Screw-driver</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Screw-driver" sketch:type="MSLayerGroup" transform="translate(2.000000, 2.000000)" stroke="#ffffff" stroke-width="2"> <path d="M38.6,32 L60.4,10.2 C61.2,9.4 61.2,8.2 60.4,7.4 L53.4,0.4 C52.6,-0.4 51.4,-0.4 50.6,0.4 L28.8,22.2 C28.2,22.8 28.1,23.7 28.4,24.5 C28,24.6 27.7,24.8 27.4,25 L25.3,25.7 C24.5,26.5 24.5,27.7 25.3,28.5 L32.3,35.5 C33.1,36.3 34.3,36.3 35.1,35.5 L35.8,33.4 C36.1,33.1 36.3,32.8 36.3,32.4 C37.1,32.7 38,32.6 38.6,32 L38.6,32 Z" id="Shape" sketch:type="MSShapeGroup"> </path> <path d="M51.3,5.2 L33.7,22.8" id="Shape" sketch:type="MSShapeGroup"> </path> <path d="M55.5,9.5 L37.9,27" id="Shape" sketch:type="MSShapeGroup"> </path> <path d="M2.8,60.8 L-0.1,58 L5.6,49.6 L9.1,47.4 L26.7,29.9 L30.9,34.1 L13.3,51.7 L11.2,55.2 L2.8,60.8 Z" id="Shape" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>
 </template>
 
+
+
+<template id="templatePause Frame Wood Fixer">
+    <option value="Glue is drying" class="Extra-pause-option">Glue is drying</option>
+    <option value="Paint is drying" class="Extra-pause-option">Paint is drying</option>
+</template>
+
+<template id="templatePause Upholstery Installer">
+    <option value="Missing upholstery" class="Extra-pause-option">Missing upholstery</option>
+    <option value="Incomplete seates" class="Extra-pause-option">Incomplete seates</option>
+</template>
+
 {% endblock %}
 
 {% block js %}
@@ -152,6 +258,7 @@
         nameElement.textContent = section
         
         let sectionIcon = sectionIcons.querySelector(`[id-value="${section}"]`)
+        sectionIcon = sectionIcon.cloneNode(true)
         if(sectionIcon){
            
             nameElement.after(sectionIcon)

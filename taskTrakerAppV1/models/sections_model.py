@@ -52,19 +52,35 @@ class Items (db.Model):
     association_section = db.relationship("Items_Sections", back_populates="item")
     association_task = db.relationship("Tasks_Items", back_populates="item")
 
+
 class Items_Sections(db.Model):
+    __tablename__ = 'items_sections'
     id = db.Column(db.Integer, primary_key=True)
     item_id = db.Column(db.Integer, db.ForeignKey('items.id'))
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'))
 
+    order_of_workflow = db.Column(Integer)
+    pauses_record = db.Column(JSON)
     start_time = db.Column(DateTime(timezone=True))
     end_time = db.Column(DateTime(timezone=True))
     total_duration = db.Column(Integer)
     is_completed = db.Column(Boolean, default=False)
     is_visible = db.Column(Boolean, default=False)
+    is_paused = db.Column(Boolean, default=False)
 
     item = db.relationship("Items", back_populates="association_section")
     section = db.relationship("Sections", back_populates="association_section")
+    pauses = db.relationship('Items_Sections_Pauses', back_populates= "association_section")
     
 
 
+class Items_Sections_Pauses(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    start_time_pause = db.Column(DateTime(timezone=True))
+    end_time_pause = db.Column(DateTime(timezone=True))
+    pause_reason = db.Column(JSON)
+
+
+    item_section_id = db.Column(db.Integer, db.ForeignKey('items_sections.id'))
+    association_section = db.relationship('Items_Sections',back_populates='pauses')

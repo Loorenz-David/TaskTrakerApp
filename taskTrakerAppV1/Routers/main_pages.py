@@ -63,7 +63,7 @@ def login():
     if data:
         user = Users.query.filter_by(username=data['username']).first()
         if user and user.password == data['password']:
-            login_user(user)
+            login_user(user,remember=True)
             next_page = data.get('next')  # Get the next page from the URL
             response = {'status': '200', 'message': 'Login succesful'}
         else:
@@ -109,7 +109,13 @@ def userAction():
             record_time = record_action_time(data)
             print(record_time,'-----------')
             if data['value'] == 'end_time':
-                response['message'] = 'Item completed!'
+                response['message'] = 'Item completed !'
+                response['status'] = 'confirmation'
+            elif data['value'] == 'start_time_pause':
+                response['message'] = 'Item is paused !'
+                response['status'] = 'confirmation'
+            elif data['value'] == 'end_time_pause':
+                response['message'] = 'Continue'
                 response['status'] = 'confirmation'
     except Exception as message:
         print(message)

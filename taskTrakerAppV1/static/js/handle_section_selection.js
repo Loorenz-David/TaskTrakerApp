@@ -3,6 +3,16 @@ let sectionList = ulSections.querySelectorAll('li')
 let itemsList = document.getElementById('containerItemsList')
 let itemsData;
 
+let selectedSectionLi;
+sectionList.forEach((section)=>{
+    section.addEventListener('click',(e)=>{
+        
+        selectedSectionLi = e.currentTarget.querySelector('span').textContent
+        
+        
+        setPageForSelection(selectedSectionLi,true)
+    })
+})
 
 const trolleyTemplate = document.getElementById('trolleyContainer')
 const itemTemplate = document.getElementById('itemElement')
@@ -11,7 +21,7 @@ function loadItemsDataList(dataDictList){
     Object.keys(dataDictList).forEach((key)=>{
         let trollyClone = trolleyTemplate.content.cloneNode(true)
         let trollyList = trollyClone.querySelector("[data-value='trolleyItemsList']")
-
+        
         trollyClone.querySelector("[data-value='trolley']").textContent = key
 
         dataDictList[key].forEach((item,index)=>{
@@ -21,27 +31,128 @@ function loadItemsDataList(dataDictList){
             itemContainer.setAttribute('data-id',`${item['id']}`)
             if(item['start_time'] ){
                 add_start_item_list(itemContainer)
+                if(item['is_paused'] == true){
+                    add_pause_item_list(itemContainer)
+                }
+                
             }
+
             trollyList.appendChild(itemClone)
         })
         itemsList.appendChild(trollyClone)
     })
 }
 
-// make this to work when user selects start in itme
+
 function add_start_item_list(element){
     let hasStartedElement = document.createElement('div')
     let spanStarted = document.createElement('span')
-    hasStartedElement.classList.add('has-started')
+    hasStartedElement.classList.add('item-status','bg-green')
     spanStarted.textContent = 'Started'
+
+    hasStartedElement.setAttribute('status-id','started')
     hasStartedElement.appendChild(spanStarted)
     element.appendChild(hasStartedElement)
+
+    let hasPausedElement = document.createElement('div')
+    let spanPaused = document.createElement('span')
+    hasPausedElement.classList.add('item-status','bg-blue')
+    spanPaused.textContent = 'Paused'
+    
+    hasPausedElement.style.display = 'none'
+    hasPausedElement.setAttribute('status-id','paused')
+    hasPausedElement.appendChild(spanPaused)
+    element.appendChild(hasPausedElement)
+
+}
+
+function add_pause_item_list(element){
+    let pausedElement = element.querySelector(`[status-id='paused']`)
+    let startedElement = element.querySelector(`[status-id='started']`)
+    pausedElement.style.display = 'block'
+    startedElement.style.display = 'none' 
+   
+}
+
+function remove_pause_item_list(element){
+    let pausedElement = element.querySelector(`[status-id='paused']`)
+    let startedElement = element.querySelector(`[status-id='started']`)
+    pausedElement.style.display = 'none'
+    startedElement.style.display = 'block'
+}
+
+
+// completed items is a variable store in localstorage, it is reset every day
+let totalItemsCompleted = 0
+let totalItemsCount= {'itemCountActive':0,'itemCountStarted':0,'itemCountPaused':0}
+let modifiedCounts = []
+
+function updateItemsCompleted(store=false){
+    let completedElement = document.getElementById('itemCountCompleted')
+    completedElement.textContent = totalItemsCompleted
+    if(store){
+        localStorage.setItem(`${selectedSectionLi}itemCountCompleted`,totalItemsCompleted)
+    }
+    
+}
+
+function update_count_items(){
+    modifiedCounts.forEach((countName)=>{
+        
+            let countElement = document.getElementById(`${countName}`)
+            countElement.textContent = `${totalItemsCount[countName]}`
+        
+        
+    })
+    modifiedCounts = []
+}
+
+function resetTotalItemsCount(){
+    for(const count in totalItemsCount){
+        console.log(count)
+        totalItemsCount[count] = 0
+        modifiedCounts.push(count)
+    
+    }
+    totalItemsCompleted = 0
+    updateItemsCompleted()
+    update_count_items()
+}
+
+function count_items(item){
+    let itemQuantity = item.item.quantity
+
+    if(item.start_time ){
+        if(!item.is_paused){
+            totalItemsCount['itemCountStarted'] +=  parseInt(itemQuantity)
+            if(!modifiedCounts.includes('itemCountStarted')){
+                modifiedCounts.push('itemCountStarted')
+            }
+        } 
+    }
+    else{
+        totalItemsCount['itemCountActive'] += parseInt(itemQuantity)
+        if(!modifiedCounts.includes('itemCountActive')){
+        modifiedCounts.push('itemCountActive')
+        }
+    }
+   
+    if(item.is_paused){
+        totalItemsCount['itemCountPaused'] += parseInt(itemQuantity)
+        if(!modifiedCounts.includes('itemCountPaused')){
+        modifiedCounts.push('itemCountPaused')
+        }
+    }
+    
+    
+    
+
 }
 
 function loadItemsList(dataList,query=false){
    
-   
     sortedByTrolleys = dataList.reduce((acc,item)=>{
+        count_items(item)
         let key = item.trolley;
         if(!key){
             key='No-Trolley'
@@ -52,16 +163,19 @@ function loadItemsList(dataList,query=false){
 
         acc[key].push(item)
         return acc
-    },{})
+        },{})
 
     if(!query){
         itemsData = sortedByTrolleys
     }
 
-    console.log(sortedByTrolleys)
+    let itemCompletedCount = localStorage.getItem(`${selectedSectionLi}itemCountCompleted`)
+    if(itemCompletedCount){
+        totalItemsCompleted = Number(itemCompletedCount)
+        updateItemsCompleted()
+    }
+    update_count_items()
     loadItemsDataList(sortedByTrolleys)
-  
-
 }
 
 const queryInput = document.getElementById('articleNumberInput')
@@ -89,20 +203,20 @@ queryInput.addEventListener('input',(e)=>{
 
 })
 
-sectionList.forEach((section)=>{
-    section.addEventListener('click',(e)=>{
-        
-        let selection = e.currentTarget.querySelector('span').textContent
-        console.log(selection)
-        setPageForSelection(selection)
-    })
-})
+
+
+
+const sectionTitle = document.getElementById('headerSelection')
+
 
 async function setPageForSelection(selectedSection,toggleMenu=true){
-    itemsList.innerHTML = ''
     
-    queryInput.placeholder = `Search item in ${selectedSection}... `
-
+    itemsList.innerHTML = ''
+    resetTotalItemsCount()
+   
+    sectionTitle.querySelector('#sectionTitle').textContent = selectedSection
+   
+   
     if(toggleMenu){
         toogle_hamburger_btn()
     }
@@ -138,7 +252,7 @@ itemsList.addEventListener('click',(event)=>{
             const match = itemsData[trolley].findIndex(item => item.id === selectedId)
             console.log(match)
             if (match !== -1){
-                selectedData = {'trolley':trolley,'index':match,'selectedData':itemsData[trolley][match]}
+                selectedData = {'trolley':trolley,'index':match,'selectedData':itemsData[trolley][match],'itemQuantity':parseInt(itemsData[trolley][match]['item']['quantity'])}
             }
             }
             selectedElement= clickedItem
@@ -153,9 +267,12 @@ itemsList.addEventListener('click',(event)=>{
 
 
 
-const page = document.querySelector('.full-page')
+const page = document.getElementById('itemPage')
 const closeBtn = document.getElementById('closePageBtn')
 const startBtn = document.getElementById('startBtn')
+const pauseBtn = document.getElementById('pauseBtn')
+const continueBtn = document.getElementById('continueBtn')
+
 const containerStartBtn = startBtn.parentElement
 const finishBtn = document.getElementById('finishBtn')
 
@@ -173,14 +290,29 @@ const taskTemplate = document.getElementById('taskListTemplate')
 function checkForStartTime(){
 
     if(selectedData['selectedData']['start_time']){
+        
         containerStartBtn.style.display = 'none'
         tasksPageContainer.style.display = 'flex'
         finishBtn.style.display ='flex'
+
+        if(selectedData['selectedData']['is_paused']){
+            continueBtn.style.display = 'flex'
+            pauseBtn.style.display = 'none'
+            finishBtn.style.display = 'none'
+        }else{
+            continueBtn.style.display = 'none'
+            pauseBtn.style.display = 'flex'
+            
+            
+        }
+           
     }
     else{
         tasksPageContainer.style.display = 'none'
         containerStartBtn.style.display = 'flex'
         finishBtn.style.display ='none'
+        pauseBtn.style.display = 'none'
+        continueBtn.style.display = 'none'
     }
 }
 
@@ -188,7 +320,9 @@ function openItemPage(data){
     page.style.display = 'flex'
     hamburgerBtn.style.display = 'none'
     console.log(data)
+   
     checkForStartTime()
+   
     
     item_article_number.textContent =  data['item']['article_number']
     item_type.textContent = data['item']['item_type']
@@ -223,10 +357,23 @@ function check_task_completion(){
     are_tasks_checked = Array.from(boxList).every(box => box.checked )
     if (are_tasks_checked){
         finishBtn.classList.replace('bg-grey','bg-dark')
+        pauseBtn.style.display = 'none'
+
     }
     else{
         if(finishBtn.classList.contains('bg-dark')){
             finishBtn.classList.replace('bg-dark','bg-grey')
+            if(selectedData['selectedData']['start_time'] ){
+                if(selectedData['selectedData']['is_paused'] ){
+                    pauseBtn.style.display = 'none'
+                    continueBtn.style.display = 'flex'
+                }else{
+                    pauseBtn.style.display = 'flex'
+                    continueBtn.style.display = 'none'
+                }
+               
+            }
+            
         }
         
     }
@@ -256,8 +403,15 @@ async function finishBtnAction(){
                     delete itemsData[trolley]
                 }
                 selectedElement.remove()
-            
-            closePage()
+
+                
+                totalItemsCount['itemCountStarted'] -= selectedData['itemQuantity']
+                totalItemsCompleted += selectedData['itemQuantity']
+                modifiedCounts = ['itemCountStarted']
+                updateItemsCompleted(true)
+
+                closePage()
+                
             }else{
                 console.log(response)
             }
@@ -281,13 +435,144 @@ function startBtnAction(){
 
     add_start_item_list(selectedElement)
 
+
     let fetchDict = {'type':'set_time','id':selectedData['selectedData']['id'],'value':'start_time'}
 
-    handleUserAction(fetchDict)
+    handleUserAction(fetchDict)   
 
-    
-    
+    totalItemsCount['itemCountStarted'] += selectedData['itemQuantity']
+    totalItemsCount['itemCountActive'] -= selectedData['itemQuantity']
+    modifiedCounts = ['itemCountStarted','itemCountActive']
+    update_count_items()
 }
+
+async function pauseBtnAction(pauseType,boolean,continueDisplay,pauseDisplay,item_list_funtion){
+
+    let fetchDict = {'type':'set_time','id':selectedData['selectedData']['id'],'value':pauseType,'pause_reason':pauseReasonDict}
+    let response = await handleUserAction(fetchDict)
+
+    if(response['status'] == 'confirmation'){
+
+        selectedData['selectedData']['is_paused'] = boolean
+        continueBtn.style.display = continueDisplay
+        pauseBtn.style.display = pauseDisplay
+        item_list_funtion(selectedElement)
+
+        if(pauseType == 'start_time_pause'){
+            finishBtn.style.display = 'none'
+        }
+        else{
+            finishBtn.style.display = 'flex'
+        }
+
+        if(boolean){
+            closePage()
+        }
+        
+    }else{
+        console.log(response)
+    }
+}
+
+const pausePopup = document.getElementById('pausePopup')
+const closePausePopup = document.getElementById('closePausingPopupBtn')
+const reasonForPauseSelect = document.getElementById('reasonForPause')
+const pauseDueToSectionContainer = document.getElementById('pauseDueToSectionContianer')
+const pauseSectionSelect = document.getElementById('pauseSectionSelect')
+const pauseSelectContainer = document.getElementById('pauseSelectContainer')
+const pauseSubmitBtn = document.getElementById('submitPauseBtn')
+
+
+let pauseReasonDict = {'reason':''}
+
+function popupPauseReason(){
+    
+    pausePopup.style.display = 'flex'
+    
+    const templateExtraOptions = document.getElementById(`templatePause ${selectedSectionLi}`)
+    if(templateExtraOptions){
+        let optionClone = templateExtraOptions.content.cloneNode(true)
+        reasonForPauseSelect.appendChild(optionClone)
+    }
+
+    const optionOther = document.createElement('option');
+    let otherText = 'other'
+    optionOther.value = otherText; 
+    optionOther.textContent = otherText;
+    optionOther.classList.add('Extra-pause-option')
+    reasonForPauseSelect.appendChild(optionOther);
+}
+
+
+reasonForPauseSelect.addEventListener('change',()=>{
+    let selectedReason = reasonForPauseSelect.value
+    
+    pauseReasonDict['reason'] = selectedReason
+    
+    if(selectedReason == 'waiting for other section'){
+        pauseDueToSectionContainer.style.display = 'flex'
+        pauseReasonDict['pause_due_to_section'] = ''
+    }
+
+
+})
+pauseSectionSelect.addEventListener('change',()=>{
+    let selectedDueSection = pauseSectionSelect.value
+    
+    
+    pauseReasonDict['pause_due_to_section'] = selectedDueSection 
+    console.log(pauseReasonDict)
+  
+})
+
+pauseSubmitBtn.addEventListener('click',()=>{
+    for (const key in pauseReasonDict){
+        if(pauseReasonDict[key] == ''){
+            
+            setTimeout(()=>{
+                fetch_message({'status':'alert','message':'Select an option'})
+            },100)
+            return
+            
+        }
+    }
+
+    pauseBtnAction('start_time_pause',true,'flex','none',add_pause_item_list)
+    totalItemsCount['itemCountPaused'] += selectedData['itemQuantity']
+    totalItemsCount['itemCountStarted'] -= selectedData['itemQuantity']
+    modifiedCounts = ['itemCountPaused', 'itemCountStarted']
+    update_count_items()
+
+    resetPauseOptions()
+})
+
+
+function resetPauseOptions(){
+    pausePopup.style.display = 'none'
+    pauseReasonDict = {'reason':''}
+    pauseSectionSelect.style.display = 'none'
+    let optionsToRemove = document.querySelectorAll('.Extra-pause-option')
+    optionsToRemove.forEach((option)=>{
+    option.remove()
+    })
+}
+
+
+pauseBtn.addEventListener('click',()=>{
+    
+    popupPauseReason()
+})
+continueBtn.addEventListener('click',()=>{
+    pauseBtnAction('end_time_pause',false,'none','flex',remove_pause_item_list)
+    totalItemsCount['itemCountPaused'] -= selectedData['itemQuantity']
+    totalItemsCount['itemCountStarted'] += selectedData['itemQuantity']
+    modifiedCounts = ['itemCountPaused', 'itemCountStarted']
+    update_count_items()
+})
+
+closePausePopup.addEventListener('click',()=>{
+    resetPauseOptions()
+})
 
 closeBtn.addEventListener('click',()=>{
     closePage()
@@ -326,10 +611,11 @@ async function handleUserAction(fetchDict){
             selectedData['selectedData']['tasks'][taskIndx]['is_completed'] = fetchDict['value']
             check_task_completion()
         }
-        else if (fetchDict['value'] == 'end_time'){
-            console.log('enddd')
+        else if (fetchDict['value'] == 'end_time' || fetchDict['value'] == 'start_time_pause' || fetchDict['value'] == 'end_time_pause' ){
+            
             fetch_message(response)
         }
+       
     }
     return response
 }

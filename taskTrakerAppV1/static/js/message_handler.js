@@ -34,6 +34,7 @@ function fetch_message(dataDict,extra_param=undefined){
 
 function hideFetchMessage (fetchSvg){
     fetchMessageContainer.classList.remove('slide-down')
+    
     setTimeout(()=>{
         fetchMessageContainer.style.display = 'none'
        

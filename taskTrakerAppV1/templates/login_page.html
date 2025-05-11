@@ -7,25 +7,27 @@
 {% endblock %}
 
 {% block content %}
-<main class="items-center justify-center bg-green-de">
+<main class="items-center justify-center bg-green-de ">
     <div class="login-container">
         <div class="flex-row header-10 padding-bottom-3"><span class="header-10">Login</span></div>
         <div class="flex-column gap-2">
-            <div class="flex-column gap-05">
-                <div class="flex-row"><span>Username:</span></div>
-                <div class="flex-row">
-                    <input type="text" id="username">
+            <div class="flex-column ">
+                <div class="flex-column gap-05">
+                    <div class="flex-row"><span>Username:</span></div>
+                    <div class="flex-row">
+                        <input type="text" id="username">
+                    </div>
+                </div>
+                <div class="flex-column gap-05 padding-2">
+                    <div class="flex-row"><span>Password:</span></div>
+                    <div class="flex-row">
+                        <input type="password" id="password">
+                    </div>
                 </div>
             </div>
-            <div class="flex-column gap-05 padding-2">
-                <div class="flex-row"><span>Password:</span></div>
+            <div class="flex-column ">
                 <div class="flex-row">
-                    <input type="password" id="password">
-                </div>
-            </div>
-            <div class="flex-column">
-                <div class="flex-row">
-                    <button id="loginBtn">login</button>
+                    <button id="loginBtn" class="btn bg-green">login</button>
                 </div>
             </div>
         </div>

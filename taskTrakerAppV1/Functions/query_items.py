@@ -24,7 +24,6 @@ def query_items(data):
              if task.task.section.section_name == section_name:
                 tasks.append({
                     'task_id':task.id,
-                    
                     'is_completed': task.is_completed,
                     'task':{
                             'task_name':task.task.task_name,
@@ -37,6 +36,7 @@ def query_items(data):
             'id':row.id,
             'is_completed':row.is_completed,
             'is_visible':row.is_visible,
+            'is_paused':row.is_paused,
             'start_time':row.start_time,
             'end_time': row.end_time,
             'end_time': row.end_time,

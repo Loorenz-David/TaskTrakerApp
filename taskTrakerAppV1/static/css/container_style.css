@@ -6,9 +6,20 @@
 }
 .itemList{
     flex:1;
-    overflow: auto;
-   
+    overflow: auto;  
+}
+
+.popupContainer{
     
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    justify-content: center;
+    padding: 20px 20px;
+    box-sizing: border-box;
+    border-radius:10px;
+
 }
 
 .itemElement{
@@ -121,7 +132,7 @@
     box-sizing: border-box;
     background-color: white;
     height: 60px;
-    padding: 10px;
+    padding: 10px 0;
   
 }
 textarea{
@@ -130,18 +141,17 @@ textarea{
     padding: 5px 5px;
 }
 
-.has-started{
+.item-status{
     display: flex;
     align-items: center;
     justify-content: center;
     margin-left:auto;
     border-radius:5px;
-    background-color:rgb(27, 114, 27);
-    padding:3px 5px;
+    padding:3px 6px;
     box-sizing:border-box;
 
 }
-.has-started span{
+.item-status span{
     color:white;
     font-size:12px;
 

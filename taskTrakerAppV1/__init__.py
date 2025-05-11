@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from .task_dict import task_list
+from datetime import timedelta
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -11,7 +12,7 @@ def create_app():
 
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///track_app_db.db' #default path should be track_app_db.db
     app.config['SECRET_KEY'] = "secrete app key" 
-    
+    app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=30)
 
     db.init_app(app)
 
@@ -24,8 +25,8 @@ def create_app():
 
     from .models import Sections, Items, Items_Sections, Tasks, Tasks_Items,Users
     with app.app_context():
-        # db.create_all()
-       
+        db.create_all()
+      
 
         section_list = ['Dismantler','Cleaner','Upholstery Remover', 'Foam Installer','Upholstery Installer','Wood Frame Fixer','Remontering', 'Photography']
         
@@ -63,7 +64,7 @@ def create_app():
 
         create_test_item =  False
         if create_test_item: 
-            item = Items(article_number = '88', upholstery='vg6',quantity='4',condition='not stabe / frame issues',trolley='tr-1')
+            item = Items(article_number = '11', upholstery='vg6',quantity='4',condition='not stabe / frame issues',trolley='tr-1')
             db.session.add(item)
             query = Sections.query.all()
             
@@ -85,9 +86,9 @@ def create_app():
 
 
 
-        create_user_test = False
+        create_user_test =False
         if create_user_test:
-            account = Users(username='Vitaliy',password='Vitaly', sections=['Photography'],role='Worker')
+            account = Users(username='Vitaly',password='Vitaly', sections=["Photography","Remontering"],role='Worker')
             db.session.add(account)
             db.session.commit()
 
