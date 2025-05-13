@@ -31,15 +31,16 @@ def create_app():
         section_list = ['Dismantler','Cleaner','Upholstery Remover', 'Foam Installer','Upholstery Installer','Wood Frame Fixer','Remontering', 'Photography']
         
         
-        special_section = 'Wood Frame Fixer'
-        special_order = 3
+
+        special_section_order = {'Wood Frame Fixer':3,'Upholstery Remover':2}
+        
         order_section_indx = 1
         for section in section_list:
             query_section = Sections.query.filter_by(section_name=section).first()
             
             if not query_section:
-                if section == special_section:
-                    new_section = Sections(section_name=section,section_order_indx=special_order)
+                if section in special_section_order:
+                    new_section = Sections(section_name=section,section_order_indx=special_section_order[section])
                 else:
                     new_section = Sections(section_name=section,section_order_indx=order_section_indx)
                     order_section_indx += 1
@@ -92,9 +93,7 @@ def create_app():
             db.session.add(account)
             db.session.commit()
 
-        # change = Users.query.get(4)
-        # change.password = 'Nazar'
-        # db.session.commit()
+       
     
         
 

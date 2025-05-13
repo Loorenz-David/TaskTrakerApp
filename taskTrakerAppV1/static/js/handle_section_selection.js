@@ -513,9 +513,15 @@ reasonForPauseSelect.addEventListener('change',()=>{
         pauseDueToSectionContainer.style.display = 'flex'
         pauseReasonDict['pause_due_to_section'] = ''
     }
-
-
+    else{
+        if('pause_due_to_section' in pauseReasonDict){
+            pauseDueToSectionContainer.style.display = 'none'
+            delete pauseReasonDict['pause_due_to_section']
+        }
+        
+    }
 })
+
 pauseSectionSelect.addEventListener('change',()=>{
     let selectedDueSection = pauseSectionSelect.value
     
@@ -548,9 +554,11 @@ pauseSubmitBtn.addEventListener('click',()=>{
 
 
 function resetPauseOptions(){
+
+    pauseSectionSelect.value = ""; 
     pausePopup.style.display = 'none'
     pauseReasonDict = {'reason':''}
-    pauseSectionSelect.style.display = 'none'
+    pauseDueToSectionContainer.style.display = 'none'
     let optionsToRemove = document.querySelectorAll('.Extra-pause-option')
     optionsToRemove.forEach((option)=>{
     option.remove()
