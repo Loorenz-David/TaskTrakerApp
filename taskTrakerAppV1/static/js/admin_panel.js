@@ -19,12 +19,21 @@ function loadDataInPage(data){
             
 
             if(section == 'general_stats'){
-                let avgHour = data[section]['average_item_seconds'] * 3600
-                sectionElementContainer.querySelector(`[data-value='averageItemPerHour']`).textContent = avgHour.toFixed(4)
+                let avgHourRaw = data[section]['average_raw_item_seconds'] * 3600
+                let avgHourReal = data[section]['average_real_item_seconds'] * 3600
+                
+                sectionElementContainer.querySelector(`[data-value='averageRawItemPerHour']`).textContent = avgHourRaw.toFixed(3)
+                sectionElementContainer.querySelector(`[data-value='averageRealItemPerHour']`).textContent = avgHourReal.toFixed(3)
             }
             else{
-                let avgMinutes = Math.floor(data[section]['average_time_seconds'] / 60)
-                sectionElementContainer.querySelector(`[data-value='avgCompletionTime']`).textContent = avgMinutes
+                let rawTime = Math.floor(data[section]['raw_time'] / 60)
+                let realTime = Math.floor(data[section]['real_time'] / 60)
+                let pauseTimeWork = Math.floor(data[section]['pause_time_work'] / 60)
+
+                sectionElementContainer.querySelector(`[data-value='avgRawTime']`).textContent = rawTime
+                sectionElementContainer.querySelector(`[data-value='avgRealTime']`).textContent = realTime
+                sectionElementContainer.querySelector(`[data-value='avgPauseWork']`).textContent = pauseTimeWork
+
 
             }
            
