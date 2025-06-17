@@ -154,7 +154,7 @@ def restart_item(data):
                                 data={'value':'end_time_pause'},
                                 set_time=set_time)
                 record_pause(query_item_section=query_item_section,
-                                data={'value':'start_time_pause','pause_reason':f'{data['user']}, restarted item to this section','is_work_related':True},
+                                data={'value':'start_time_pause','pause_reason':f'{data["user"]}, restarted item to this section','is_work_related':True},
                                 set_time=set_time)
                 
                 query_item_section.state = 'Restart'
