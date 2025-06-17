@@ -151,11 +151,11 @@ def delete_in_db(data):
 
     model = getattr(models,data['model_name'],None)
     if not model:
-        raise Exception(f'no model with name: {data['model_name']}')
+        raise Exception(f'no model with name: {data["model_name"]}')
     
     query = model.query.get(int(data['item_id']))
     if not query:
-        raise Exception(f'no match found for id {data['item_id']}')
+        raise Exception(f'no match found for id {data["item_id"]}')
     
     
     db.session.delete(query)
