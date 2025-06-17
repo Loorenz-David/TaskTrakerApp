@@ -368,7 +368,7 @@ def modify_item(data):
                 if data[key]['value'] == True:
                     query_section = Sections.query.get(int(data[key]['section_id']))
                     if not query_section:
-                        raise Exception(f'no section found with that name section id: {data[key]['section_id']}')
+                        raise Exception(f'no section found with that name section id: {data[key]["section_id"]}')
 
                     new_assignment = Items_Sections(item=query_item,section=query_section)
                     db.session.add(new_assignment)
