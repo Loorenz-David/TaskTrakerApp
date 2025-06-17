@@ -1,0 +1,46 @@
+.top-menu {
+  overflow-x: scroll;
+  white-space: nowrap;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ccc;
+}
+
+.top-menu::-webkit-scrollbar{
+  width: 0.1px;
+  height: 1px;
+}
+.top-menu::-webkit-scrollbar-thumb {
+  background-color: rgba(136, 136, 136, 0.5);
+  border-radius: 10px;
+}
+
+.top-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabs-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: border-bottom 0.3s, color 0.3s;
+  font-family: sans-serif;
+  font-size: 14px;
+  color: rgb(92, 92, 92);
+}
+
+.tab:hover {
+  color: #007bff;
+}
+
+.tab.active {
+  border-bottom: 3px solid #007bff;
+  color: #007bff;
+  font-weight: bold;
+}

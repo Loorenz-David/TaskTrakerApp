@@ -1,0 +1,503 @@
+{% extends 'Base.html' %}
+
+
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/top_menu.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/custom_select.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/input_styles.css')}}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<main class="padding-top-6" style="overflow-y: hidden !important;">
+    <div class="width100" id="topMenu">
+        <div class="top-menu" >
+        <div class="tabs-container">
+            <div class="tab active" menu-value="Users">Users</div>
+            <div class="tab" menu-value="Roles">Roles</div>
+            <div class="tab" menu-value="Sections">Sections</div>
+            <div class="tab" menu-value="Tasks">Tasks</div>
+            <div class="tab" menu-value="Pause_Reasons">Pause reason</div>
+            <div class="tab" menu-value="Storage_Unit">Storages</div>
+        </div>
+        </div>
+    </div>
+    <div class="full-page gap-3" >
+        
+        <div class="flex-row justify-start items-center padding-2 padding-top-1 margin-bottom-3" id="EditObjContainerHeader">
+            <div class="flex-row justify-start gap-1">
+                <span class="header-10 text-dark-grey" >Edit</span>
+
+                <!-- where the model that will be edit is  -->
+                <span class="EditTitle header-10 text-dark-grey"></span>
+            </div>
+            <div class="flex-row justify-end items-center">
+                <div class="closeItem padding-bottom-3" onclick="openPageBtn(this,'main-page','full-page',false)">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-column" id="EditObjContainerFields">
+            <div class="flex-row input-row ">
+                <div class="flex-column items-start gap-1 padding-top-1">
+                    <span class="text text-dark-grey">username</span>
+                    <input class=" input-noline input-size-15" type="text" name="">
+                </div>
+                <div class="input-line-separator"></div>
+                <div class="flex-column items-start gap-1 padding-top-1">
+                    <span class="text text-dark-grey">Phone</span>
+                    <input  class="input-noline input-size-15" type="text" name="">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="flex-column" id="EditObjContainerRelations">
+
+        </div>
+
+        <div class="flex-column padding-1 gap-2 margin-top-4"  id="EditObjContainerBtns">
+            <div class="btn bg-blue" id="saveEditObjBtn" onclick="edit_obj(this)">
+                <span class="text-17">Save</span>
+            </div>
+            <div class="btn" id="deleteEditObjBtn" onclick="delete_obj(this)">
+                    <span class="text-17 text-red"> </span>
+            </div>
+            <div class="btn bg-red" id="confirmDeleteEditObjBtn" onclick="confirm_deletion(this)" style="display: none;">
+                    <span class="text-17 ">Confirm Delition</span>
+            </div>
+        </div>
+        
+    </div>
+    
+
+    <div class="main-page flex-column width100 flex-1 padding-top-1" style="overflow-y: scroll;">
+        <div class="flex-row justify-start padding-2">
+            
+        </div>
+
+        <!-- container for the query model -->
+        <div class="flex-column items-start width100 flex-1 " style="margin-bottom: 200px;"   id="QueryContainer">
+
+            <!-- query headers  -->
+            <div class="flex-column items-start width100">
+                <div class="flex-row gap-2 flex-1 justify-start padding-1 padding-right-2" id="QueryHeaders">
+                    <div class="flex-column  flex-1 ">
+                        <!-- container for object heders -->
+                        <div class="object-headers flex-row gap-1" id="QueryHeadersContainer">
+                            
+                            
+                        </div>
+                    </div>
+                    <div class="flex-column flex-1 items-end ">
+                        <span class="text text-grey"></span>
+                    </div>
+                </div>
+            </div>
+            <!--  -->
+            
+            
+              <div class="flex-column items-start width100 flex-1 padding-bottom-3 " style="max-height: 400px !important; overflow-y: scroll;" id="QueryResults">
+                <!--  each query  -->
+                
+                <!--  -->
+                 
+              </div>
+              
+              
+              
+        </div>
+
+        <!-- conatiner for the actions on that model -->
+         <div class="flex-column width100">
+            <div class="flex-row padding-bottom-3 gap-1" id="CreationContainerTitle">
+                <span class=" header-20 text-dark-grey">Create</span>
+                <span  class="creation-title header-20 text-dark-grey" ></span>
+            </div>
+            <div class="flex-column gap-2 width100 items-start "    id="CreationContainer">
+            
+            
+            </div>
+            <div class="flex-row flex-1 padding-1 padding-bottom-2" id="CreationContainerBtn">
+                    <div class="btn bg-blue" data-value="" onclick="create_obj(this)" ><span class="text-17">Add</span></div>
+            </div>
+         </div>
+        
+      
+    </div>
+
+    
+
+</main>
+
+
+<!-- Templates for the headers  -->
+
+<template id="QueryHeaderSpan">
+    <span class="block flex-1 text text-grey">Name</span>
+</template>
+
+<!-- --------------------------------------------------------------- -->
+
+
+<!-- templates for the query items -->
+<template id="QueryResultsElement">
+    <div class=" query-item-element flex-column items-start width100" >
+        <div class="flex-row gap-2 flex-1 justify-start items-center query-item-container">
+            <div class="flex-column flex-1 ">
+                <!-- object main info container -->
+                <div  class="object-display-info justify-start flex-row gap-1 items-center">
+                    
+                </div>
+            </div>  
+            <!-- edit button  onclick function is missing!! -->
+            <div class="object-edit-btn flex-column flex-1 items-end"  onclick="">
+                <div>
+                    <svg class="svg-15 svg-color-dark-grey" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M14.846 1.403l3.752 3.753.625-.626A2.653 2.653 0 0015.471.778l-.625.625zm2.029 5.472l-3.752-3.753L1.218 15.028 0 19.998l4.97-1.217L16.875 6.875z" fill="currentColor"></path></g></svg>
+                </div>
+            </div>
+
+            <!-- arrow to open extra info -->
+            <div class="flex-column ">
+                <div class="arrow" >
+                    <svg class="svg-2 svg-color-grey" viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="currentColor" d="M5.70711 9.71069C5.31658 10.1012 5.31658 10.7344 5.70711 11.1249L10.5993 16.0123C11.3805 16.7927 12.6463 16.7924 13.4271 16.0117L18.3174 11.1213C18.708 10.7308 18.708 10.0976 18.3174 9.70708C17.9269 9.31655 17.2937 9.31655 16.9032 9.70708L12.7176 13.8927C12.3271 14.2833 11.6939 14.2832 11.3034 13.8927L7.12132 9.71069C6.7308 9.32016 6.09763 9.32016 5.70711 9.71069Z" ></path> </g></svg>
+                </div>
+            </div>
+        </div>
+        <!-- the drop info of the object -->
+            <div class="flex-column gap-1 width100 items-start query-item-container bg-light-grey drop-info">
+            <div class="object-extra-info-title  flex-row justify-start flex-1">
+                <!-- title of extra info -->
+                 <span id="extraInfoTitle" class="title-extra-info subheader-1 text-dark-grey"></span>
+            </div>
+            <!-- extra info container -->
+            <div class="extra-info-container flex-row flex-wrap gap-1 justify-start flex-1" >
+                <!-- extra info elements -->
+                
+            </div>
+            </div>
+    </div>
+</template>
+
+<template id="objectDisplayInfoRow">
+    <div class="flex-row  gap-1 margin-left-3">
+
+    </div>
+</template>
+
+
+<template id="objectDisplayInfoSpan">
+    <span class="block flex-1 "></span>
+</template>
+
+<template id="ObjectExtraInfoContainer">
+    <div class="flex-row padding-left-2  gap-1 justify-start items-center">
+        <span class="extra-info-text text"></span>
+    </div>
+</template>
+
+<!-- --------------------------------------------------------------- -->
+
+<template id="TemplateCreationContainerTitle">
+     <div class="flex-row justify-start padding-left-2" >
+        <span  class="creation-title header-20 text-dark-grey" ></span>
+    </div>
+</template>
+
+
+<template id="TemplateCreationFormContainerUsers">
+   
+    <form action="" id="creationContainerForm">
+            <div class="flex-column width100">
+            <div class="flex-row input-row">
+
+                <!-- user name input -->
+                <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                    <span class="text text-dark-grey">User name:</span>
+                    <input class="inputInfo input-noline input-size-15" name="username" type="text" value="">
+                </div>
+                <div class="input-line-separator"></div>
+
+                <!-- user role input -->
+                <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                    <span class="text text-dark-grey">Role:</span>
+                    <select name="roles" class="inputInfo select-Container select-input-row input-width-100 input-size-15">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex-row input-row">
+
+                <!-- user email input -->
+                <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                    <span class="text text-dark-grey">Email:</span>
+                    <input name="email" class="inputInfo input-noline input-size-15" type="text" value="">
+                </div>
+                <div class="input-line-separator"></div>
+
+                <!-- user phone input -->
+                <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                    <span class="text text-dark-grey">Phone:</span>
+                    <input  name="phone" class="inputInfo input-noline  input-size-15" type="text" value="">
+                </div>
+            </div>
+             <div class="flex-row input-row">
+
+                <!-- user password input -->
+                <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                    <span class="text text-dark-grey">Password:</span>
+                    <input name="password" class="inputInfo input-noline input-size-15" type="text" value="">
+                </div>
+               
+                
+            </div>
+            <div class="flex-column width100 gap-2 padding-2 padding-top-3">
+
+                <!-- user assign input check boxes -->
+                <div class="flex-row justify-start">
+                    <span class="subheader-1 text-dark-grey ">Assign sections:</span>
+                </div>
+                <!-- where the custom check box options go  -->
+                <div   class="customCheckbox-Container flex-column gap-2 items-start width100 max-height-400 border-box">
+                    
+                </div>
+            </div>
+
+            
+        </div>
+    </form>
+</template>
+
+
+<template id="TemplateCreationFormContainerRoles">
+     
+            <div class="flex-column width100" id="creationContainerForm">
+                <div class="flex-row input-row">
+
+                    <!-- section name input -->
+                    <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                        <span class="text text-dark-grey">Role name:</span>
+                        <input class="inputInfo input-noline input-size-15" name="role_name" type="text" value="">
+                    </div>
+                    
+
+                    <!-- add more inputs if need it under -->
+                    <!-- <div class="input-line-separator"></div> -->
+                    
+                </div>
+                
+                <div class="flex-column width100 gap-2 padding-2 padding-top-3">
+
+                    <!-- user assign input check boxes -->
+                    <div class="flex-row justify-start">
+                        <span class="subheader-1 text-dark-grey ">Assign users:</span>
+                    </div>
+                    <!-- where the custom check box options go  -->
+                    <div   class="customCheckbox-Container flex-column gap-2 items-start width100 max-height-400 border-box">
+                        
+                    </div>
+                </div>
+        </div>
+</template>
+
+<template id="TemplateCreationFormContainerSections">
+     
+            <div class="flex-column width100" id="creationContainerForm">
+                <div class="flex-row input-row">
+
+                    <!-- section name input -->
+                    <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                        <span class="text text-dark-grey">Section name:</span>
+                        <input class="inputInfo input-noline input-size-15" name="section_name" type="text" value="">
+                    </div>
+                    
+
+                    <!-- add more inputs if need it under -->
+                    <!-- <div class="input-line-separator"></div> -->
+                    
+                </div>
+                
+                <div class="flex-column width100 gap-2 padding-2 padding-top-3">
+
+                    <!-- user assign input check boxes -->
+                    <div class="flex-row justify-start">
+                        <span class="subheader-1 text-dark-grey ">Assign tasks:</span>
+                    </div>
+                    <!-- where the custom check box options go  -->
+                    <div   class="customCheckbox-Container flex-column gap-2 items-start width100 max-height-400 border-box">
+                        
+                    </div>
+                </div>
+        </div>
+</template>
+
+<template id="TemplateCreationFormContainerTasks">
+     
+            <div class="flex-column width100 padding-bottom-3" id="creationContainerForm">
+                <div class="flex-row input-row">
+
+                    <!-- task name input -->
+                    <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                        <span class="text text-dark-grey">Task name:</span>
+                        <input class="inputInfo input-noline input-size-15" name="task_name" type="text" value="">
+                    </div>
+                    
+
+                    <!-- add more inputs if need it under -->
+                    <!-- <div class="input-line-separator"></div> -->
+                    
+                </div>
+                <div class="flex-row input-row">
+
+                    <!-- task description input -->
+                    <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                        <span class="text text-dark-grey">Task description:</span>
+                        <input class="inputInfo input-noline input-size-15" name="task_description" type="text" value="">
+                    </div>
+                </div>
+                
+                <!-- if i fix the logic of organixing task by order index maybe i give option to select sections -->
+
+                <!-- <div class="flex-column width100 gap-2 padding-2 padding-top-3">
+
+                     user assign input check boxes 
+                    <div class="flex-row justify-start">
+                        <span class="subheader-1 text-dark-grey ">Assign sections:</span>
+                    </div>
+                     where the custom check box options go  
+                    <div   class="customCheckbox-Container flex-column gap-2 items-start width100 max-height-400 border-box">
+                        
+                    </div>
+                </div> -->
+        </div>
+</template>
+
+<template id="TemplateCreationFormContainerPause_Reasons">
+     
+            <div class="flex-column width100" id="creationContainerForm">
+                <div class="flex-row input-row">
+
+                    <!-- section name input -->
+                    <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                        <span class="text text-dark-grey">Pause description:</span>
+                        <input class="inputInfo input-noline input-size-15" name="pause_descriptions" type="text" value="">
+                    </div>
+                    
+
+                    <!-- add more inputs if need it under -->
+                    <!-- <div class="input-line-separator"></div> -->
+                    
+                </div>
+                
+                <div class="flex-column width100 gap-2 padding-2 padding-top-3">
+
+                    <!-- user assign input check boxes -->
+                    <div class="flex-row justify-start">
+                        <span class="subheader-1 text-dark-grey ">Assign section:</span>
+                    </div>
+                    <!-- where the custom check box options go  -->
+                    <div   class="customCheckbox-Container flex-column gap-2 items-start width100 max-height-400 border-box">
+                        
+                    </div>
+                </div>
+        </div>
+</template>
+
+<template id="TemplateCreationFormContainerStorage_Unit">
+     
+            <div class="flex-column width100 padding-bottom-3" id="creationContainerForm">
+                <div class="flex-row input-row">
+
+                    <!-- task name input -->
+                    <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                        <span class="text text-dark-grey">Storage type:</span>
+                        <input class="inputInfo input-noline input-size-15" name="storage_type" type="text" value="">
+                    </div>
+                    
+
+                    <!-- add more inputs if need it under -->
+                    <!-- <div class="input-line-separator"></div> -->
+                    
+                </div>
+                <div class="flex-row input-row">
+
+                    <!-- task description input -->
+                    <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                        <span class="text text-dark-grey">Abreviation:</span>
+                        <input class="inputInfo input-noline input-size-15" name="abreviation" type="text" value="">
+                    </div>
+                    <div class="input-line-separator"></div>
+                    <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                        <span class="text text-dark-grey">Number:</span>
+                        <input class="inputInfo input-noline input-size-15" name="storage_number" type="number" value="">
+                    </div>
+                    <div class="input-line-separator"></div>
+                    <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                        <span class="text text-dark-grey">Capacity:</span>
+                        <input class="inputInfo input-noline input-size-15" name="capacity" type="number" value="">
+                    </div>
+                </div>
+                
+                <!-- if i fix the logic of organixing task by order index maybe i give option to select sections -->
+
+                <!-- <div class="flex-column width100 gap-2 padding-2 padding-top-3">
+
+                     user assign input check boxes 
+                    <div class="flex-row justify-start">
+                        <span class="subheader-1 text-dark-grey ">Assign sections:</span>
+                    </div>
+                     where the custom check box options go  
+                    <div   class="customCheckbox-Container flex-column gap-2 items-start width100 max-height-400 border-box">
+                        
+                    </div>
+                </div> -->
+        </div>
+</template>
+
+
+
+
+<template id="TemplatecustomCheckbox">
+    <div class="checkBoxRow flex-row gap-2 justify-start items-center"> 
+        <label class="custom-checkbox">
+            <input class="inputInfo" target-input="1" name="" type="checkbox">
+            <span class="checkmark"></span>
+        </label>
+        <div class="flex-row justify-start items-center gap-1">
+            <div target-input="2" >
+                
+            </div>
+            <div>
+                <span target-input="3" class="text-17 text-dark-grey"></span>
+            </div>
+        </div>  
+        
+    </div>
+</template>
+<template id="TemplatecustomCheckbox_order_indx">
+    <div class="flex-row " style="width: 60px;" >
+            <input class="inputInfo" name="order_indx" type="number" style="text-align: center;" target-input="4">
+    </div>
+</template>
+
+<template id="Templateselect">
+    <option  target-input="1" value=""></option>
+</template>
+
+
+
+{% endblock %}
+
+
+{% block js %}
+
+<script src="{{url_for('static',filename='js/top_menu_interactions.js')}}"></script>
+<!-- <script src="{{url_for('static',filename='js/custom_select.js')}}"></script> -->
+<script src="{{url_for('static',filename='js/custom_dropdown.js')}}"></script>
+<script src="{{url_for('static',filename='js/creation_tools.js')}}"></script>
+<script src="{{url_for('static',filename='js/close_open_page.js')}}"></script>
+{% endblock %}

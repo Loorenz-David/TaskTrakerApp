@@ -4,21 +4,57 @@
 
 {% block stylesheet %}
 <link rel="stylesheet" href="{{url_for('static', filename='css/input_styles.css')}}">
-
+<link rel="stylesheet" href="{{url_for('static', filename='css/spinner.css')}}">
+<script src="{{ url_for('static', filename='js/zebra-browser-print-js-v31250/BrowserPrint-3.1.250.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/zebra-browser-print-js-v31250/BrowserPrint-Zebra-1.1.250.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
 <main > 
-    <div class="closeItem padding-bottom-3" id="closeItemPageBtn">
-        <div class="bar"></div>
-        <div class="bar"></div>
+    
+     <div class="flex-column width-100 margin-top-6"  id="ImageObjContainer">
+        <div class="flex-row" id="imageSlider">
+            <div id="takeOrUploadPicture" class="flex-column gap-2 justify-center items-center padding-2" style="width: 350px; height: 350px; border:1px dashed grey; " >
+                
+                <div class="flex-row">
+                    <label for="UploadInput" class="btn" style="border: 1px solid rgb(108, 108, 249);">
+                        <span class="text-17" style="color: rgb(108, 108, 249);"> Upload Picture</span>
+                        <div class="spinner-20"  style="display: none;"></div>
+                    </label>
+                    <input type="file" 
+                            accept="image/*" 
+                            id="UploadInput"
+                            style="display: none; ">
+                    
+                </div>
+                <div class="flex-row">
+                    <label for="cameraInput" class="btn bg-blue">
+                        <span class="text-17"> Take Picture</span>
+                        <div class="spinner-20"  style="display: none;"></div>
+                    </label>
+                    <input type="file" 
+                            accept="image/*" 
+                            capture="environment" 
+                            id="cameraInput"
+                            style="display: none; ">
+                    
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="flex-row">
+    <div class="flex-row padding-top-3">
         <div class="flex-column">
-            <input data-value="trolley"  type="text" class="input-underline input-center input-width-100" >
+            <select data-value="storage_number" id="storage_abr_number" class="select-input-row bg-transparent" style="border-bottom: 0.5px solid gray !important; font-size: 30px; font-weight: 600;color: grey; padding: 10px;">
+                
+            </select>
+
             <div class="flex-row gap-1  padding-top-1">
                 <div class="flex-column justify-center">
-                    <span class="text">Wagon</span>
+                    <select id="storageType"  class="select-input-row bg-transparent">
+                        {% for storage_type in storage_types %}
+                            <option value="{{storage_type}}">{{ storage_type}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="flex-column justify-center notification-counter">
                     <span style="color: white; font-size: 10px;" id="itemCounter">0</span>
@@ -28,7 +64,24 @@
             
         </div>
     </div>
-    <div class="flex-column   padding-top-4">
+    <div class="flex-column   padding-top-4 ">
+         <div class="flex-row input-row">
+            <div class="flex-column gap-1 flex-1 items-start padding-top-1 ">
+                <span class=" text-dark-grey">Item class</span>
+                <select id="selectItemClass" data-value="item_class"  class="select-sections select-input-row bg-transparent"  style="border: none !important; font-size: 15px !important; margin-bottom: 10px !important;">
+                    {% for item_class in item_classes %}
+                        <option value="{{item_class}}"> {{item_class}}</option>
+                    {% endfor %}
+                </select>
+            </div>  
+            <div class="input-line-separator"></div>
+            <div class="flex-column gap-1 flex-1 items-start padding-top-1 ">
+                <span class=" text-dark-grey">Item type</span>
+                <select id="selectItemType" data-value="item_type"  class="select-sections select-input-row bg-transparent"  style="border: none !important; font-size: 15px !important; margin-bottom: 10px !important;">
+                    
+                </select>
+            </div>  
+        </div>
         <div class="flex-row input-row ">
             <div class="flex-column gap-1 flex-1 items-start padding-top-1">
                 <span class="text text-dark-grey">Article number </span>
@@ -40,7 +93,8 @@
                 <span class="text text-dark-grey">Condition</span>
                 <div class="flex-row justify-start">
                     <!-- <span class="text ">Stable / no wood issues</span> -->
-                    <select data-value="condition" id="" class="select-sections">
+                    <select data-value="condition" id="" class="select-input-row bg-transparent" style="padding-right: 15px;">
+                        <option value=""></option>
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
@@ -63,19 +117,39 @@
             </div>
        </div>
        <div class="flex-row input-row">
-        <div class="flex-column gap-1 flex-1 items-start padding-top-1 ">
-            <span class=" text-dark-grey">Item type</span>
-            <select data-value="item_type"  class="select-sections" data-value="item_type" style="border: none !important; font-size: 15px !important; margin-bottom: 10px !important;">
-                <option value="Dining chair">Dining chair</option>
-                <option value="Arm chair">Arm chair</option>
-                <option value="Stol">Stol</option>
-            </select>
-        </div>  
-   </div>
+            <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                <span class="text text-dark-grey">Due Date</span>
+                <input type="date" data-value="due_date" class="input-noline" style=" padding: 0;font-size: 15px;">
+                
+            </div>
+            <div class="input-line-separator"></div>
+            <div class="flex-column gap-1 flex-1 items-start padding-top-1 ">
+                <span class="text text-dark-grey">Porpuse</span>
+                <select data-value="porpuse" class="select-input-row bg-transparent" style=" font-size: 20px !important; height: 40px; ">
+                    <option value="Shop">Shop</option>
+                    <option value="Client">Client</option>
+                </select>
+                
+            </div>
+            <div class="input-line-separator"></div>
+            <div class="flex-column gap-1 flex-1   padding-top-1 ">
+                <span class="text text-dark-grey">Came back</span>
+                <input data-check="item_came_back" id="item_came_back" type="checkbox" style="width: 20px; height: 20px; ">
+            </div>
+       </div>
+        <!-- <div class="flex-row input-row">
+            <div class="flex-column gap-1 flex-1 items-start padding-top-1 ">
+                <span class=" text-dark-grey">Issues</span>
+                <textarea name="" data-value="issues" id="" class="input-noline">
+                    
+                </textarea>
+            </div>  
+       </div> -->
+      
        <div class="flex-row input-row">
             <div class="flex-column gap-1 flex-1 items-start padding-top-1 ">
                 <span class=" text-dark-grey">Notes</span>
-                <textarea name="" data-value="notes" id="" class="input-noline">
+                <textarea  data-value="notes"  class="input-noline">
 
                 </textarea>
             </div>  
@@ -83,66 +157,108 @@
        <div class="flex-row input-row" >
         <div class="flex-column gap-1 flex-1 items-start padding-top-1 " style="overflow-x: hidden;">
             <span class=" text-dark-grey">Assigned Sections</span>
-            <div class="flex-row gap-3 padding-top-1 padding-bottom-2  input-center" style="overflow-x: scroll; justify-content: flex-start !important;">
-                <div class="flex-column gap-05">
-                    <input checked type="checkbox" data-value-checkbox="Dismantler" class="checkbox-sections">
-                    <span class="text text-grey">Dismantler &nbsp;&nbsp;</span>
-                </div>
-                <div class="flex-column gap-05">
-                    <input checked type="checkbox" data-value-checkbox="Cleaner" class="checkbox-sections">
-                    <span class="text text-grey">Cleaner &nbsp;&nbsp;</span>
-                </div>
-                <div class="flex-column gap-05">
-                    <input checked type="checkbox" data-value-checkbox="Upholstery Remover" class="checkbox-sections">
-                    <span class="text text-grey">Upholstery Remover</span>
-                </div>
-                <div class="flex-column gap-05">
-                    <input checked type="checkbox" data-value-checkbox="Foam Installer" class="checkbox-sections">
-                    <span class="text text-grey">Foam Installer</span>
-                </div>
-                <div class="flex-column gap-05">
-                    <input checked type="checkbox" data-value-checkbox="Upholstery Installer" class="checkbox-sections">
-                    <span class="text text-grey">Upholstery Installer</span>
-                </div>
-                <div class="flex-column gap-05">
-                    <input checked type="checkbox" data-value-checkbox="Wood Frame Fixer" class="checkbox-sections">
-                    <span class="text text-grey">Frame Fixer</span>
-                </div>
-                <div class="flex-column gap-05">
-                    <input checked type="checkbox" data-value-checkbox="Remontering" class="checkbox-sections">
-                    <span class="text text-grey">Remontering &nbsp;&nbsp;</span>
-                </div>
-                <div class="flex-column gap-05">
-                    <input checked type="checkbox" data-value-checkbox="Photography" class="checkbox-sections">
-                    <span class="text text-grey">Photography &nbsp;&nbsp;</span>
-                </div>
+            <div class="flex-row gap-3 padding-2  input-center" style="overflow-x: scroll; justify-content: flex-start !important;">
+                {% for section_dict in sections_list %}
+                    <div class="flex-column  gap-05 justify-center" >
+                        <input checked type="checkbox" data-value-checkbox="{{section_dict['id']}}" type="checkbox" style="width: 20px; height: 20px; ">
+                        <span class="text text-grey" >{{section_dict['section_name']}} &nbsp;&nbsp;</span>
+                        
+                    </div>
+                {% endfor %}
+                
 
             </div>
         </div>
        </div>
        
     </div>
-    <div class="footer-page" style="position: absolute !important;">
-        <div class="flex-row ">
+    <div class="flex-row  padding-2 padding-bottom-4 padding-top-4" >
+        <div class="flex-column gap-2 width-100 ">
             <div class="btn bg-green" id="addItemDbBtn">
-                <span>Add Item</span>
+                <span class="text-17">Add Item</span>
+            </div>
+            
+            <div class=" btn bg-dark hide"  id="printBtn" >
+                <span class="text-17 text-white">Print Label</span>
+            </div>
+             <div class="btn " style="border: 1px solid rgb(72, 72, 72);"  id="connectToPrinterBtn">
+                <span class="text-17" style="color:rgb(72, 72, 72);">Connect to printer</span>
             </div>
         </div>
+
         
     </div>
 </main>
+
+
+
+<template id="TemplateImgForSlider">
+    <div class="flex-column justify-center width-100 imageFlexContainer">
+        <div onclick="removeUploadedPicture(this)" class=" bg-blur-white" style="position: relative; left: 135px; top:60px; padding: 10px 10px  !important; border-radius: 50%;">
+            <div class="closeItem closeBarContainer" style="padding: 0 !important; width: 20px !important;">
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <div class="spinner-20" style="display: none;"></div>
+        </div>
+        <img style="height: 350px; width: 350px;" src="" alt="">
+    </div>
+</template>
+
 {% endblock %}
 
 {% block js %}
 
-<script src="{{url_for('static', filename='js/adding_item.js')}}"></script>
+<script src="{{url_for('static', filename='js/print_connection.js')}}"></script>
+<script src="{{url_for('static', filename='js/print_work_labels.js')}}"></script>
 <script>
-    hamburgerBtn.style.display = 'none'
+    document.addEventListener('DOMContentLoaded', function () {
+    setUpPrinter().then((connected) =>{
+        if(connected){
+            displayPrintBtn()
+        }
+        else{
+            displayConnection()
+        }
+    })
+    
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.3/dist/heic2any.min.js"></script>
+<script src="{{url_for('static', filename='js/inject_data_select.js')}}"></script>
 
-    let closeItemPageBtn = document.getElementById('closeItemPageBtn')
-    closeItemPageBtn.addEventListener('click',()=>{
-        window.location.href = '/'
+<script>
+    let storageMap = {{storages_map  | safe}}
+    let itemsMap = {{item_types_dict | safe}}
+    
+    
+    const selectStorageType = document.getElementById('storageType')
+    const selectStorageNumber = document.getElementById('storage_abr_number')
+    const selectItemClass = document.getElementById('selectItemClass')
+    const selectItemType = document.getElementById('selectItemType')
+    
+    
+    selectStorageType.addEventListener('change', (e)=>{
+        injectDataToSelect(selectStorageNumber,selectStorageType,storageMap)
+        
+    })
+    selectItemClass.addEventListener('change',(e)=>{
+        injectDataToSelect(selectItemType,selectItemClass,itemsMap)
     })
 
+    
+
+    if(storageMap){
+        injectDataToSelect(selectStorageNumber,selectStorageType,storageMap)
+    }
+    if(itemsMap){
+        injectDataToSelect(selectItemType,selectItemClass,itemsMap)
+    }
+
 </script>
+
+<script src="{{url_for('static', filename='js/adding_item.js')}}"></script>
+<script src="{{url_for('static', filename='js/upload_picture.js')}}"></script>
+
+
 {% endblock %}

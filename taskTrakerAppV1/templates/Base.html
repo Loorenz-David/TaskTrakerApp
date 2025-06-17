@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/text_styles.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/btn_styles.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/bg_styles.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/svg_styles.css')}}">
     {% block stylesheet %}
 
     {% endblock %}
@@ -42,21 +43,34 @@
     <div class="bar"></div>
     <div class="bar"></div>
     </div>
-    <div class="menu-page">
-      <div class="flex-row justify-end" style="display: none;" id="addItemBtn">
-        <div class="btn bg-white" style="width: 150px;">
-            <a style="text-decoration: none; white-space: nowrap;" href="/add_item">Add item</a>
-        </div>
-      </div>
-    
+    <div class="menu-page ">
+       
         <ul id="ulSections">
         </ul>
 
-        {% if current_user.role == 'admin' %}
+         <div class="flex-row justify-end gap-2 items-center" >
+              <a style="text-decoration: none; color: white; font-size:20px;" href="/working_sections/router/working_sections">Working Sections</a>
+         </div>
+
+        {% if has_role('Admin') %}
         <div class="flex-row justify-end gap-2 items-center"  id="adminPanelBtn">
               <a style="text-decoration: none; color: white; font-size:20px;" href="/admin_panel">Admin panel</a>
-              <svg fill="#ffffff" style="width:30px;height:30px;" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 294 294" xml:space="preserve" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M279,250H15c-8.284,0-15,6.716-15,15s6.716,15,15,15h264c8.284,0,15-6.716,15-15S287.284,250,279,250z"></path> <path d="M30.5,228h47c5.247,0,9.5-4.253,9.5-9.5v-130c0-5.247-4.253-9.5-9.5-9.5h-47c-5.247,0-9.5,4.253-9.5,9.5v130 C21,223.747,25.253,228,30.5,228z"></path> <path d="M123.5,228h47c5.247,0,9.5-4.253,9.5-9.5v-195c0-5.247-4.253-9.5-9.5-9.5h-47c-5.247,0-9.5,4.253-9.5,9.5v195 C114,223.747,118.253,228,123.5,228z"></path> <path d="M216.5,228h47c5.247,0,9.5-4.253,9.5-9.5v-105c0-5.247-4.253-9.5-9.5-9.5h-47c-5.247,0-9.5,4.253-9.5,9.5v105 C207,223.747,211.253,228,216.5,228z"></path> </g> </g></svg>
+              <!-- <svg fill="#ffffff" style="width:30px;height:30px;" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 294 294" xml:space="preserve" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M279,250H15c-8.284,0-15,6.716-15,15s6.716,15,15,15h264c8.284,0,15-6.716,15-15S287.284,250,279,250z"></path> <path d="M30.5,228h47c5.247,0,9.5-4.253,9.5-9.5v-130c0-5.247-4.253-9.5-9.5-9.5h-47c-5.247,0-9.5,4.253-9.5,9.5v130 C21,223.747,25.253,228,30.5,228z"></path> <path d="M123.5,228h47c5.247,0,9.5-4.253,9.5-9.5v-195c0-5.247-4.253-9.5-9.5-9.5h-47c-5.247,0-9.5,4.253-9.5,9.5v195 C114,223.747,118.253,228,123.5,228z"></path> <path d="M216.5,228h47c5.247,0,9.5-4.253,9.5-9.5v-105c0-5.247-4.253-9.5-9.5-9.5h-47c-5.247,0-9.5,4.253-9.5,9.5v105 C207,223.747,211.253,228,216.5,228z"></path> </g> </g></svg> -->
         </div>
+
+        <div class="flex-row justify-end gap-2 items-center"  >
+              <a style="text-decoration: none; color: white; font-size:20px;" href="/creation_tools/router/creation_tools">Creation tools</a>
+             
+        </div>
+        <div class="flex-row justify-end gap-2 items-center"  >
+              <a style="text-decoration: none; color: white; font-size:20px;" href="/items_db/router/items_db">Items Data Base</a>
+
+        </div>
+          <div class="flex-row justify-end gap-2 items-center"  >
+              <a style="text-decoration: none; color: white; font-size:20px;" href="/add_item">Add Item</a>
+
+        </div>
+
         {% endif %}
         
         <div class=" flex-row justify-start margin-push-down">

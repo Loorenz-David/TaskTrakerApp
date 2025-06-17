@@ -11,7 +11,7 @@ async function request_handler(bp,functionTarget,dataDict,actionDict=undefined) 
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data)
+        
         if(actionDict){
             for(const key in actionDict){
                 if(typeof responseHandlers[key] === 'function'){

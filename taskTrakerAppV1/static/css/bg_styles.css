@@ -7,8 +7,14 @@
 .bg-dark{
     background-color: rgb(63, 63, 63);
 }
+.bg-yellow{
+    background-color: rgb(194, 203, 24);
+}
 .bg-grey{
     background-color: rgb(126, 126, 126);
+}
+.bg-light-grey{
+    background-color: rgb(240, 240, 240);
 }
 .bg-white{
     background-color: white !important;
@@ -16,10 +22,23 @@
 .bg-blue{
     background-color: rgb(102, 102, 243) !important;
 }
+.bg-light-blue{
+    background-color: rgb(148, 148, 217) !important;
+}
+.bg-red{
+    background-color: rgb(175, 39, 39) !important;
+}
 .bg-transparent-dark{
     background-color: rgba(0, 0, 0, 0.232);
+}
+.bg-transparent{
+    background-color: transparent !important;
 }
 .bg-blur{
     backdrop-filter: blur(10px);
     background-color: rgba(0, 0, 0, 0.336); /* Optional for frosted effect */
   }
+.bg-blur-white{
+backdrop-filter: blur(10px);
+background-color: rgba(252, 252, 252, 0.535); /* Optional for frosted effect */
+}

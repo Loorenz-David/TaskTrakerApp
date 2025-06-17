@@ -7,6 +7,10 @@
     font-size:25px;
     font-weight:600;
 }
+.header-20{
+    font-size:20px;
+    font-weight:600;
+}
 
 .header-1{
     font-size:10px;
@@ -21,16 +25,26 @@
     color: rgb(172, 172, 172);
 }
 .text-dark-grey{
-    color: rgb(147, 147, 147);
+    color: rgb(104, 104, 104);
 }
+
 .text-blue{
     color: rgb(48, 19, 129);
 }
 .text-red{
     color: rgb(181, 2, 2);
 }
+.text-incompleted{
+    color: rgb(206, 0, 0);
+    text-decoration: line-through;
+}
+
 .text-white{
     color: rgb(255, 255, 255);
+}
+
+.text-10{
+    font-size: 10px;
 }
 
 .text{

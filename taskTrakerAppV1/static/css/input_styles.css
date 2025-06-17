@@ -3,11 +3,18 @@
     border: none !important;
     border-bottom: 0.5px solid grey !important;
     
-    font-size: 40px;
-    font-weight: 600;
-    font-family: sans-serif;
-    color: rgb(146, 146, 146);
+
 }
+.input-size-20{
+    font-size: 20px;
+    font-family: sans-serif;
+}
+.input-size-15{
+    font-size: 15px;
+    font-family: sans-serif;
+}
+
+
 .input-underline:focus{
     outline: none;
 
@@ -19,6 +26,8 @@
 .input-width-100{
     width: 140px;
 }
+
+
 
 .input-row{
     border-top:0.5px solid gray ;
@@ -45,20 +54,25 @@
     outline: none ;
 }
 
+.input-select{
+    border: none !important; 
+    
+    margin-bottom: 10px !important;
+}
+
 
 .checkbox-sections{
     transform: scale(1.5);
 }
 
-.select-sections{
+.select-input-row{
     border: none !important;
-    border-left: 0.5px solid grey !important;
-    font-size: 20px;
+    
     padding: 0;
     padding-left: 10px;
 
 }
-.select-sections:focus{
+.select-input-row:focus{
     outline:none
 }
 

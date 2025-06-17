@@ -36,6 +36,7 @@
     padding-right:50px;
     box-sizing: border-box;
     z-index: 998;
+    gap:40px;
 }
 
 #ulSections{
