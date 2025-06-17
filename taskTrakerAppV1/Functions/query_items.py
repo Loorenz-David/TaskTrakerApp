@@ -368,7 +368,7 @@ def query_assignments(data):
     if data.get('get_counts'):
         column = getattr(Items_Sections,data['get_counts'],None)
         if column is None:
-            raise Exception(f'No coulumn with name {data['get_counts']}')
+            raise Exception(f'No coulumn with that name name')
         today = datetime.now(timezone.utc)
         range_date = timedelta(days=7)
         start_range = today - range_date
