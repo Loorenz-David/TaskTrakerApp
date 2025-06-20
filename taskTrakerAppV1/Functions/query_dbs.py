@@ -175,13 +175,15 @@ def get_storages():
 
     return storage_dict, storage_types
 
-def get_sections():
+def get_sections(get_icon=False):
 
     query_sections = Sections.query.all()
     sections_list = []
     for section in query_sections:
         temp_dict = {'section_name':section.section_name,
                      'id':section.id}
+        if get_icon:
+            temp_dict['icon'] = section.section_icon
         sections_list.append(temp_dict)
 
     return sections_list

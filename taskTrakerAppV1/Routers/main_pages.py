@@ -133,7 +133,7 @@ def add_item():
 
     # gets the sections available in the models
     
-    sections_list = get_sections()
+    sections_list = get_sections(get_icon=True)
     
     item_types_dict = {}
     item_classes = []
@@ -172,7 +172,7 @@ def items_db():
 
     # gets the sections available in the models
     
-    sections_list = get_sections()
+    sections_list = get_sections(get_icon=True)
     
 
     return render_template('items_db.html',

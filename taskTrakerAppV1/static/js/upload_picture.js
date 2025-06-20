@@ -3,6 +3,7 @@ const takePictureInput =  document.getElementById('UploadInput')
 const UploadPictureInput = document.getElementById('cameraInput')
 const templateImgContainer = document.getElementById('TemplateImgForSlider')
 const imageSlider = document.getElementById('imageSlider')
+const imageContainerSlider = document.getElementById('imageContainerSlider')
 const takeOrUploadPicture = document.getElementById('takeOrUploadPicture')
 let allowFileList = ['image/jpeg','image/png','image/webp','image/heic']
 
@@ -12,8 +13,10 @@ let deletedPicture = false
 
 function removeActionContainer(){
     takeOrUploadPicture.style.display = 'none'
+    imageContainerSlider.classList.remove('hide')
 }
 function showActionContainer(){
+    imageContainerSlider.classList.add('hide')
     takeOrUploadPicture.style.display = 'flex'
 }
 
@@ -73,12 +76,12 @@ async function process_image(file,input){
                 .then( response => {
                     if (response ['status'] == 'confirmation'){
                         add_remove_spinner(input)
-                        removeActionContainer()
                         fetch_message(response)
                         let preview = imgContainer.querySelector('img')
                         preview.src = response['picture_url']
                         imgUrl = [response['picture_url']]
-                        imageSlider.appendChild(imgContainer)
+                        imageContainerSlider.appendChild(imgContainer)
+                        removeActionContainer()
                         
                     }
                     else{
@@ -158,7 +161,12 @@ async function removeUploadedPicture(btn){
     if(response['status'] == 'confirmation'){
         fetch_message(response)
         parent.remove()
-        showActionContainer()
+
+        if(imageContainerSlider.children.length == 0){
+            showActionContainer()
+            
+        }
+        
         deletedPicture = true
     }
 

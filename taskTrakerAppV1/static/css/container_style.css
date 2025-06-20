@@ -170,6 +170,43 @@
 }
 
 
+.custom-checkbox-svg{
+    cursor: pointer;
+    padding: 10px 8px;
+    display: inline-block;
+    border: 0.5px solid grey;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.10);
+    border-radius: 5px;
+    
+    transition: transform 100ms ease,
+                border 0.3s ease,
+                box-shadow 0.3s ease,
+                color 0.3s ease,
+                background-color 0.3s ease;
+}
+.custom-checkbox svg,
+.custom-checkbox span{
+    transition: color 0.3s ease;
+}
+
+.custom-checkbox-svg:active{
+    transform: scale(0.93);
+}
+
+.custom-checkbox-svg.checkedSvg{
+    border-radius: 0.5px solid rgb(79, 79, 245);
+    box-shadow: 0 0 5px rgba(79, 79, 245, 0.386);
+    svg{
+        color: rgb(79, 79, 245) !important;
+        
+    }
+    span{
+        color: rgb(79, 79, 245) !important;
+    }
+}
+
+
+
 .footer-page{
     position: relative;
     bottom: 0;

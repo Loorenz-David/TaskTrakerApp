@@ -27,6 +27,11 @@ def create_section_assignment(section_list,item,query_item=False):
         db.session.add(assignment)
 
         for task in section_query.assign_task:
+            query_old_task = Tasks_Items.query.filter(and_(Tasks_Items.item_id == item.id, Tasks_Items.section_id == int(selected_section), Tasks_Items.task_id == task.id ) ).all()
+            if query_old_task:
+                for match in query_old_task:
+                    db.session.delete(match)
+
             item_task = Tasks_Items(item=item, task=task.task, section_id = int(selected_section))
             db.session.add(item_task)
             
@@ -351,8 +356,8 @@ def modify_item(data):
             restarted = restart_item({'item_id':data['item_id'],'section_list':data.get('section_list'),'user':data.get('user')})
             if len(restarted['not_change_sections']) > 0:
                 response['not_change_sections'] = restarted['not_change_sections']
-
-
+            if data.get('restarting_from') and data.get('restarting_from') == 'working sections':
+                query_item.state = 'Active'
    
     if any('modify_assign_section' in key for key in data):
         for key in data:
@@ -366,12 +371,17 @@ def modify_item(data):
                     if data[key]['value'] == False:
                         db.session.delete(query_assignment)
                 if data[key]['value'] == True:
-                    query_section = Sections.query.get(int(data[key]['section_id']))
-                    if not query_section:
-                        raise Exception(f'no section found with that name section id: {data[key]["section_id"]}')
+                    print('creating new assignment !!!!')
+                    new_assignment = create_section_assignment([data[key]['section_id']],
+                                                                item=query_item)
+                    print('assginment was created')
+                    # query_section = Sections.query.get(int(data[key]['section_id']))
+                    # if not query_section:
+                    #     raise Exception(f'no section found with that name section id: {data[key]["section_id"]}')
 
-                    new_assignment = Items_Sections(item=query_item,section=query_section)
-                    db.session.add(new_assignment)
+                    # new_assignment = Items_Sections(item=query_item,section=query_section)
+                    # db.session.add(new_assignment)
+
 
 
     

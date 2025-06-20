@@ -66,7 +66,7 @@ function showFetchMessage(fetchSvg,dataDict,btn){
 }
 
 function hideFetchMessage (fetchSvg){
-    console.log('removing message')
+    
     clearTimeout(FetchMessagetimeOutId)
     fetchMessageContainer.classList.remove('slide-down')
     

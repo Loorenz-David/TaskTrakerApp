@@ -26,6 +26,8 @@ let selectedItem;
 let currentItemState;
 
 
+
+
 function clearPage(){
 
     // clears images from slider
@@ -117,7 +119,7 @@ async function load_selected_item(itemData,itemId,section=undefined){
         currentItemState = itemData['state']
         
         let taskChildren = taskObjContainer.children
-        console.log(itemData)
+       
         let areTaskCompleted = check_task_completion()
         hideAllBtnInteractions()
         if(areTaskCompleted){
@@ -465,7 +467,7 @@ btnContinue.addEventListener('click',async(e)=>{
             let negativeCount = -Math.abs(itemQuantity)
 
             change_counter_value('Working',itemQuantity)
-            console.log(currentItemState,'in modify count ---')
+           
             change_counter_value(currentItemState,negativeCount)
             
             currentItemState = 'Working'
@@ -487,13 +489,14 @@ btnFinish.addEventListener('click',async (e)=>{
             
 
             let targetDict = dataMap.get(Number(selectedItem))
+            
             let itemQuantity = Number(targetDict['quantity'])
             let negativeCount = -Math.abs(itemQuantity)
             change_counter_value('Completed',itemQuantity)
-            console.log(currentItemState, 'in dfinished')
+            
             change_counter_value(currentItemState,negativeCount)
 
-            openPageBtn(undefined,'main-page','full-page',false)
+            openPageBtn(undefined,'main-page','pageForDisplayItem',false)
 
             dataMap.delete(Number(selectedItem))
             let targetContainer = queryResultsContainer.querySelector(`[data-value="itemContainer"][data-id="${selectedItem}"]`)
@@ -525,12 +528,13 @@ RestartItemBtn.addEventListener('click', async (e)=>{
     let fetchRestartItem = {
                             'section_list':listOfSelectedSections,
                             'state':'Restart',
-                            'item_id': targetItemId
+                            'item_id': targetItemId,
+                            'restarting_from':'working sections'
     }
-    console.log(fetchRestartItem)
+    
     let response = await request_handler('main','edit_item',fetchRestartItem)
     if(response){
-        console.log(response)
+       
         if('not_change_sections' in response){
            fetch_message({'status':'alert','message':`section ${response['not_change_sections'][0]} already has item`},RestartItemBtn)
         }else{

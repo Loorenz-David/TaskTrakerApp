@@ -25,6 +25,8 @@ const btnSaveItem = document.getElementById('btnSaveItem')
 const btnDeleteItem = document.getElementById('btnDeleteItem')
 const btnConfirmDeletion = document.getElementById('btnConfirmDeletion')
 
+
+
 let modifyData = {'simple_inputs':{},'item_id':''}
 let itemSectionstemp;
 // clears some containers from previous loads 
@@ -126,7 +128,13 @@ async function load_selected_item(itemData,itemId,section=undefined){
         let targetCheckBox = checkBoxList.filter((checkBox) => checkBox.getAttribute('data-value-checkbox') == String(targetId))
         
         if(targetCheckBox.length > 0){
+            
+            let parent = targetCheckBox[0].closest('.custom-checkbox-svg')
+            
             targetCheckBox[0].checked = true
+            customCheckboxSvg(parent,true)
+           
+
         }
     })
 
@@ -306,6 +314,23 @@ selectItemState.addEventListener('change',(e)=>{
     }
 })
 
+containerForAssignSections.addEventListener('click',(e)=>{
+    
+    let clickOn = e.target
+    let targetContainer = clickOn.closest('.custom-checkbox-svg')
+    
+    if(clickOn && containerForAssignSections.contains(targetContainer)){
+        let targetCheckBox = targetContainer.querySelector('input[type="checkbox"]')
+        if(targetCheckBox.checked){
+        targetCheckBox.checked = false
+        }else{
+        targetCheckBox.checked = true
+        }
+        targetCheckBox.dispatchEvent(new Event('change'))
+        
+        customCheckboxSvg(targetContainer,targetCheckBox.checked)
+    }
+})
 
 
 if(storageMap){

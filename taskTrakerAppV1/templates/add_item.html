@@ -40,6 +40,9 @@
                     
                 </div>
             </div>
+            <div class="flex-row hide" id="imageContainerSlider">
+
+            </div>
         </div>
     </div>
     <div class="flex-row padding-top-3">
@@ -85,7 +88,7 @@
         <div class="flex-row input-row ">
             <div class="flex-column gap-1 flex-1 items-start padding-top-1">
                 <span class="text text-dark-grey">Article number </span>
-                <input data-value="article_number" type="text" class="input-noline"> 
+                <input data-value="article_number" type="number" class="input-noline"> 
                 
             </div>
             <div class="input-line-separator"></div>
@@ -93,7 +96,7 @@
                 <span class="text text-dark-grey">Condition</span>
                 <div class="flex-row justify-start">
                     <!-- <span class="text ">Stable / no wood issues</span> -->
-                    <select data-value="condition" id="" class="select-input-row bg-transparent" style="padding-right: 15px;">
+                    <select data-value="condition"  class="select-input-row bg-transparent" style="padding-right: 15px;">
                         <option value=""></option>
                         <option value="A">A</option>
                         <option value="B">B</option>
@@ -157,16 +160,27 @@
        <div class="flex-row input-row" >
         <div class="flex-column gap-1 flex-1 items-start padding-top-1 " style="overflow-x: hidden;">
             <span class=" text-dark-grey">Assigned Sections</span>
-            <div class="flex-row gap-3 padding-2  input-center" style="overflow-x: scroll; justify-content: flex-start !important;">
+            <div class="flex-row justify-start gap-2 padding-2 " style="overflow-x:scroll;" id="selectSectionContainer">
+               
+                   
+
                 {% for section_dict in sections_list %}
+                    <div class="flex-column justify-center custom-checkbox-svg  gap-1 " style="min-width: 80px !important;">
+                        {{section_dict['icon'] | safe}}
+                        <input type="checkbox" style="display:none" data-value-checkbox="{{section_dict['id']}}">
+                    
+                        <span class="text-10 text-dark-grey" style="text-align: center;">{{section_dict['section_name']}}</span>
+                   </div>
+
+<!-- 
                     <div class="flex-column  gap-05 justify-center" >
                         <input checked type="checkbox" data-value-checkbox="{{section_dict['id']}}" type="checkbox" style="width: 20px; height: 20px; ">
                         <span class="text text-grey" >{{section_dict['section_name']}} &nbsp;&nbsp;</span>
                         
-                    </div>
+                    </div> -->
                 {% endfor %}
+               
                 
-
             </div>
         </div>
        </div>
@@ -257,6 +271,7 @@
 
 </script>
 
+<script src="{{url_for('static', filename='js/custom_checkbox_svg.js')}}"></script>
 <script src="{{url_for('static', filename='js/adding_item.js')}}"></script>
 <script src="{{url_for('static', filename='js/upload_picture.js')}}"></script>
 
