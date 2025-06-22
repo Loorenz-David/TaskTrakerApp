@@ -287,6 +287,9 @@ textarea{
     svg{
         color: rgb(255, 255, 255) !important;
     }
+    span{
+        color: rgb(255, 255, 255) !important;
+    }
     
 }
 
@@ -296,12 +299,18 @@ textarea{
     svg{
         color: rgb(249, 249, 249) !important;
     }
+    span{
+        color:  rgb(249, 249, 249)  !important;
+    }
 }
 
 .status-Active{
    color: rgb(180, 180, 180) !important;
 
    svg{
+    color: rgb(180, 180, 180) !important;
+   }
+   span{
     color: rgb(180, 180, 180) !important;
    }
 }
@@ -311,6 +320,9 @@ textarea{
     color: rgb(69, 82, 19) !important;
     border: 0.5px solid rgb(69, 82, 19);
     svg{
+        color: rgb(69, 82, 19) !important;
+    }
+    span{
         color: rgb(69, 82, 19) !important;
     }
 }
@@ -323,6 +335,24 @@ textarea{
 
     svg{
         color: rgb(255, 255, 255)  !important;
+    }
+    span{
+        color: rgb(255, 255, 255)  !important;
+    }
+}
+
+.status-bar-info{
+    padding: 8px 5px;
+    border-radius: 10px;
+}
+.status-bar-info.selected-span{
+    border-radius: 10px ;
+    border:  0.5px solid rgba(79, 79, 245, 0.317);
+    box-shadow: 0 0 8px rgba(79, 79, 245, 0.386);
+
+    color: rgb(79, 79, 245) !important;
+    span{
+        color: rgb(79, 79, 245) !important;
     }
 }
 

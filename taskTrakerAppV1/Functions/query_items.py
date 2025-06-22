@@ -1,7 +1,7 @@
 from taskTrakerAppV1.models import Items_Sections, Sections, Items, Tasks_Items,Tasks, Tasks_Sections
 from taskTrakerAppV1 import db
 from datetime import datetime, timedelta, timezone
-from sqlalchemy import and_, func, and_, case
+from sqlalchemy import and_, func, and_, case, or_
 
 
 def query_items(data):
@@ -239,11 +239,23 @@ def sort_by_storage(list_of_items):
 
 def query_items_db(data):
 
- 
+    count_results = {}
     query = Items.query
+
+    if data.get('user_filters'):
+        for key, values in data['user_filters'].items():
+            target_value = values['value']
+            target_column = getattr(Items,key)
+            query = query.filter(target_column == target_value)
+            
 
     if data['query_type'] == 'all':
         query = query.all()
+
+    elif data['query_type'] == 'input_query':
+        
+        query = query.filter(Items.article_number.ilike(f"%{data['input_query']}%")).all()
+        
 
     elif data['query_type'] == 'single_item':
         query = query.filter(Items.id == data['item_id'])
@@ -262,7 +274,19 @@ def query_items_db(data):
            
             list_of_items = sort_by_storage(list_of_items)
    
-    return list_of_items
+    if data.get('get_counts'):
+        column = getattr(Items, data['get_counts'],None)
+        if column is None:
+            raise Exception('no column with that name')
+        resluts = (db.session.query(column, func.sum(Items.quantity)
+        )
+        .group_by(column)
+        ).all()
+
+        count_results = dict(resluts)
+    
+
+    return list_of_items, count_results
 
 
 
@@ -347,6 +371,7 @@ def query_assignments(data):
     
     if data.get('assignment_state'):
         state = data['assignment_state']
+        
         if 'not' in state:
             state = state.split('-')[1]
             query = query.filter(Items_Sections.state != state).all()

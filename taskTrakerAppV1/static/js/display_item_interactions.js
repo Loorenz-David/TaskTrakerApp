@@ -498,7 +498,20 @@ btnFinish.addEventListener('click',async (e)=>{
 
             openPageBtn(undefined,'main-page','pageForDisplayItem',false)
 
+            // process to remove the item from the dict Data
+            targetSelectedItemData = dataMap.get(Number(selectedItem))
+            let targetList = Data.find(([storageUnit, objArray]) => storageUnit === targetSelectedItemData['storage_number'] )
+            if(targetList){
+                let [storageUnit, objArray] = targetList
+                let indexToRemove = objArray.findIndex(obj => obj.id === targetSelectedItemData.id)
+                if(indexToRemove !== -1){
+                    objArray.splice(indexToRemove,1)
+                }
+            }
+            // removes item from dataMap
             dataMap.delete(Number(selectedItem))
+
+            
             let targetContainer = queryResultsContainer.querySelector(`[data-value="itemContainer"][data-id="${selectedItem}"]`)
             targetContainer.classList.add('fade-slide-out')
             setTimeout(()=>{

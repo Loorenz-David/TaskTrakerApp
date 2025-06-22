@@ -201,6 +201,7 @@ def item_sections_status(item_id,query_list,action_dict=None):
 
     if 'make_comparison' in action_dict:
         key1, key2 = action_dict['make_comparison']
+       
         if len(returnDict.get(key1,[])) == len(returnDict.get(key2,[])):
             return True
         else:
@@ -256,8 +257,8 @@ def record_action_time(data):
                 query_item_section.state = 'Completed'
 
                 if item_sections_status(query_item_section.item_id,
-                                        ['sections_status_completed','sections_status_incompleted'],
-                                        {'make_comparison':['sections_status_completed','sections_status_incompleted']}):
+                                        ['sections_status_completed','item_selected_section'],
+                                        {'make_comparison':['sections_status_completed','item_selected_section']}):
                     
                     modify_item({'state':'Completed','item_id':query_item_section.item_id})
         
@@ -374,6 +375,7 @@ def modify_item(data):
                     print('creating new assignment !!!!')
                     new_assignment = create_section_assignment([data[key]['section_id']],
                                                                 item=query_item)
+                    
                     print('assginment was created')
                     # query_section = Sections.query.get(int(data[key]['section_id']))
                     # if not query_section:

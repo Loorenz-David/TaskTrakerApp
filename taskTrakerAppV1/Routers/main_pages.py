@@ -173,6 +173,8 @@ def items_db():
     # gets the sections available in the models
     
     sections_list = get_sections(get_icon=True)
+
+   
     
 
     return render_template('items_db.html',
@@ -336,8 +338,8 @@ def get_items():
             response['data_count'] = items_found[1]
         else:
             items_found = query_items_db(data)
-
-            response['data'] = items_found
+            response['data'] = items_found[0]
+            response['data_count'] = items_found[1]
         response['status'] = 'confirmation'
         response['message'] = 'Data adquired!'
 

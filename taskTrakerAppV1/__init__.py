@@ -4,8 +4,9 @@ from flask_login import LoginManager, current_user
 from .task_dict import task_list
 from datetime import timedelta
 from dotenv import load_dotenv
+from flask_migrate import Migrate
 
-
+migrate = Migrate()
 db = SQLAlchemy()
 login_manager = LoginManager()
 load_dotenv()
@@ -18,7 +19,7 @@ def create_app():
     app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=30)
 
     db.init_app(app)
-
+    migrate.init_app(app,db)
     login_manager.login_view = 'main.login_router'
     login_manager.init_app(app)
 
@@ -28,7 +29,7 @@ def create_app():
 
     from .models import Sections, Items, Items_Sections, Tasks, Tasks_Items,Users,Users_Sections,Roles, Users_Roles, Items_Types_Classes,Items_Types
     with app.app_context():
-        db.create_all()
+        # db.create_all()
       
 
         section_list = ['Dismantler','Cleaner','Upholstery Remover', 'Foam Installer','sewing','Upholstery Installer','Wood Frame Fixer','Remontering', 'Photography']
@@ -167,7 +168,7 @@ def create_app():
 
     return app
 
-app = create_app()
+
 
 # from taskTrakerAppV1.Functions.query_items import query_items
 # with app.app_context():

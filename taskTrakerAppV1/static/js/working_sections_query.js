@@ -1,5 +1,4 @@
 
-
 async function query_assignments(fetchDict){
     response = await request_handler('main','get_items',fetchDict)
     if (response['status'] == 'confirmation'){
@@ -12,7 +11,8 @@ async function query_assignments(fetchDict){
         
         if('data_count' in response){
             itemCounts = response['data_count']
-            console.log(itemCounts,'item counts')
+            
+            load_item_counts(itemCounts)
         }
         
         let flatList = Data.flatMap(([storageName,items]) => items)

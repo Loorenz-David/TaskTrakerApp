@@ -172,7 +172,7 @@ def get_storages():
         
         storage_dict[storage_type].append(storage_value)
 
-
+    
     return storage_dict, storage_types
 
 def get_sections(get_icon=False):

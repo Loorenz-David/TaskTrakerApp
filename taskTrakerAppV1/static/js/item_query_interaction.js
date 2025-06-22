@@ -7,9 +7,15 @@ const queryResultsContainer = document.getElementById('queryResults')
 const dataCountDisplay = document.querySelectorAll('[data-display]')
 const inputQuerySearch = document.getElementById('inputQuery')
 const pageForQueryFilters = document.getElementById('pageForQueryFilters')
+const filtersState = document.getElementById('filtersState')
+const btnSaveFiltersQuery = document.getElementById('btnSaveFiltersQuery')
+const inputQueryType = inputQuerySearch.getAttribute('query-type')
+const statusContainer = document.getElementById('statusContainer')
+
 let Data;
 let dataMap;
 let itemCounts = {}
+let inputQueryData = []
 
 let queryFiltersActive = false
 let queryFiltersDict = {'for_display':{},'for_query':{}}
@@ -26,10 +32,12 @@ function checkFilterValue(key, storageDict,filter_for){
     }
 
     if(filterValue){
+        console.log(filterValue,'filter value')
         storageDict[filter_for][key] = queryFiltersDict[filter_for][key]
     }else{
         delete storageDict[filter_for][key]
     }
+    console.log(storageDict,'store dict')
 
     // if(key in storageDict[filter_for]){
     //     if(!queryFiltersDict[filter_for][key]['value']){
@@ -50,7 +58,7 @@ function checkFilterValue(key, storageDict,filter_for){
 function saveFiltersToStorage(targetKey=undefined,filter_for=undefined){
     let filterKeys = Object.keys(queryFiltersDict[filter_for])
     if(filterKeys.length == 0) return;
-    
+    console.log(filterKeys,'keys')
     let storeFilters = JSON.parse(localStorage.getItem('saveQueryFilters') || '{"for_display":{},"for_query":{}}') 
     
     storeFilters = checkFilterValue(targetKey,storeFilters,filter_for)
@@ -123,7 +131,7 @@ function loadFilterMemory(){
         queryFiltersActive = true
         forDisplayKeys.forEach(key =>{
             let filterDict = queryFiltersDict['for_display'][key]
-            console.log(filterDict)
+           
             let targetElement = pageForQueryFilters.querySelector(`[${filterDict['attribute']}="${key}"]`)
 
             if(targetElement && targetElement.type == 'checkbox'){
@@ -134,7 +142,16 @@ function loadFilterMemory(){
     }
     if(forQueryKeys.length > 0){
         queryFiltersActive = true
-        // missing to add query filters
+        filtersState.innerHTML = 'Applying'
+        forQueryKeys.forEach(key=>{
+            let filterDict = queryFiltersDict['for_query'][key]
+            let targetElement = pageForQueryFilters.querySelector(`[${filterDict['attribute']} = "${key}"]`)
+            console.log(targetElement,'taget Element')
+            if(targetElement){
+                targetElement.value = filterDict['value']
+            }
+        })
+        
 
     }
 
@@ -160,6 +177,8 @@ if(pageForQueryFilters){
                                                             }
                 interactedWithFilter = true
             }
+
+           
         }
         
         if(interactedWithFilter){
@@ -167,10 +186,14 @@ if(pageForQueryFilters){
             saveFiltersToStorage(targetKey,filter_for)
             activateFilters(targetKey,filter_for,value)
         }  
+        
     })
+
+
 
     document.addEventListener('DOMContentLoaded',function(){
     loadFilterMemory()
+    console.log('happend before')
 })
 }
 
@@ -181,9 +204,7 @@ if(pageForQueryFilters){
 
 function clearQuery(){
     queryResultsContainer.innerHTML = ''
-    dataCountDisplay.forEach((displayElement) =>{
-        displayElement.innerHTML = ''
-    })
+    
 
 }
 function sortTrolleyList(data){
@@ -205,18 +226,8 @@ function load_item_query(data = undefined){
     else{
         selectedData = Data
     }
-    console.log(selectedData,'selected data')
-    if(Object.keys(itemCounts).length > 0){
-        dataCountDisplay.forEach((displayElement)=>{
-            let displayName = displayElement.getAttribute('data-display')
-            let countValue = 0
-            if(displayName in itemCounts){
-                countValue = itemCounts[displayName]
-            }
-            
-            displayElement.innerHTML = countValue
-        })
-    }
+   
+   
     
     
     selectedData.forEach(([storage, items]) =>{
@@ -304,8 +315,33 @@ function load_item_query(data = undefined){
     
 }
 
-function load_item_counts(data){
+function load_item_counts(dataCounts){
+    
+    dataCountDisplay.forEach((displayElement) =>{
+        displayElement.innerHTML = ''
+    })
+    let dataCountsKeys = Object.keys(dataCounts)
+     if(dataCountsKeys.length > 0){
+        dataCountDisplay.forEach((displayElement)=>{
+            let displayName = displayElement.getAttribute('data-display')
+            if(displayName == 'Total'){
+                let totalCount  = 0
+                dataCountsKeys.forEach(key => {
+                    totalCount += dataCounts[key]
+                })
+                dataCounts['Total'] = totalCount
 
+            }
+            
+            let countValue = 0
+            if(displayName in dataCounts){
+                countValue = dataCounts[displayName]
+            }
+            
+            displayElement.innerHTML = countValue
+            console.log(displayElement)
+        })
+    }
 }
 
 
@@ -321,7 +357,8 @@ async function first_load_query(fetchDict){
        
         if('data_count' in response){
             itemCounts = response['data_count']
-            console.log(itemCounts,'data counts!!')
+            
+            load_item_counts(itemCounts)
         }
 
         
@@ -363,17 +400,17 @@ queryResultsContainer.addEventListener('click',function(e){
 
 
 
-function input_query(){
+async function input_query(){
 
     let value = inputQuerySearch.value
-    let inputQueryType = inputQuerySearch.getAttribute('query-type')
+    
 
     
     if(value.length > 0){
-        let filterdData;
+        inputQueryData = []
         if(inputQueryType == 'front_end_query'){
             
-            filterdData = Data.map(([storage,objArray]) =>{
+            inputQueryData = Data.map(([storage,objArray]) =>{
 
             const matches = objArray.filter(obj => obj.article_number.includes(value))
             return matches.length ? [storage,matches] : null
@@ -381,18 +418,36 @@ function input_query(){
             }).filter( entry => entry !== null)
         }
         else if(inputQueryType == 'back_end_query'){
-            console.log('query back end')
-            return
+
+            console.log('checking back end query')
+            let inputQueryFetchDict = {'query_type':'input_query',
+                                        'unpack_type':'essentials',
+                                        'sort':'by_storage',
+                                        'input_query': value
+                                        }
+            let response = await request_handler('main','get_items',inputQueryFetchDict)
+            if(response){
+                if(response['status'] == 'confirmation'){
+                   
+                    let queryData = response['data']
+                    inputQueryData = sortTrolleyList(queryData)
+                    console.log(inputQueryData)
+                    
+                    
+                }
+            }
+
         }
         
-        load_item_query(filterdData)
+        load_item_query(inputQueryData)
     }else{
+        inputQueryData = []
         load_item_query(Data)
     }
 }
 
 inputQuerySearch.addEventListener('input',(e)=>{
-    console.log(e)
+    
     input_query()
 })
 
@@ -420,7 +475,142 @@ function markDueDate(stringDate,targetElement){
     }
 }
 
+if(btnSaveFiltersQuery){
+    btnSaveFiltersQuery.addEventListener('click',(e)=>{
+        let interactedWithFilter = false
+        const allFilterQuerys = pageForQueryFilters.querySelectorAll('[filter-column]').forEach(input =>{
+            let value = input.value
+            let columnTarget = input.getAttribute('filter-column')
+            queryFiltersDict['for_query'][columnTarget] = {'attribute':'filter-column',
+                                                        'value': value
+                }
+            if(value !== ''){ 
+                saveFiltersToStorage(columnTarget,'for_query')
+                interactedWithFilter = true
+            
+            }else{
+                saveFiltersToStorage(columnTarget,'for_query')
+                delete queryFiltersDict['for_query'][columnTarget]
+                
+            }
 
+        
+        })
+        
+            location.reload()
+    })
+
+}
+
+
+
+let selectedStatusList = []
+
+function filterDataByStatus(data){
+    let filteredData  = []
+    console.log(data,'tageted these data -------',selectedStatusList)
+    if(selectedStatusList.length > 0){
+        filteredData = data.map(([storages,objArray]) => {
+            const matches = objArray.filter(obj => selectedStatusList.includes(obj.state))
+            return matches.length ? [storages,matches] : null
+            }).filter(entry => entry !== null)
+    }else{
+        filteredData = data
+    }
+
+    
+
+    return filteredData
+
+}
+
+function clearStatusContainer(){
+    selectedStatusList = []
+    let allStatusContainers = statusContainer.querySelectorAll('[status-value]').forEach(container =>{
+        container.setAttribute('is-active','false')
+        if(container.classList.contains('selected-span')){
+            container.classList.remove('selected-span')
+        }
+    }) 
+}
+
+statusContainer.addEventListener('click',async (e)=>{
+   
+    let clickOn = e.target
+    let targetElement = clickOn.closest('[status-value]')
+
+    if(targetElement){
+        let statusValue = targetElement.getAttribute('status-value')
+        let isActive = targetElement.getAttribute('is-active')
+        
+        if(isActive === 'true'){
+            let index = selectedStatusList.indexOf(statusValue)
+            if(index !== -1){
+                selectedStatusList.splice(index,1)
+            }
+            targetElement.setAttribute('is-active','false')
+            targetElement.classList.remove('selected-span')
+        }
+        else if (isActive === 'false'){
+
+            // id completed is selected .... else if completed is in list, 
+            // completed is a query to back end, thus is treated independantly
+            if(statusValue == 'Completed'){
+               clearStatusContainer()
+            }
+            else{
+                if(selectedStatusList.includes('Completed')){
+                    let completedContainer = statusContainer.querySelector('[status-value = "Completed"]')
+                    completedContainer.setAttribute('is-active','false')
+                    completedContainer.classList.remove('selected-span')
+                    selectedStatusList = []
+                }
+            }
+            
+            selectedStatusList.push(statusValue)
+            targetElement.setAttribute('is-active','true')
+            targetElement.classList.add('selected-span')
+            
+        }
+       
+
+        let filteredData;
+
+        
+        if(statusValue == 'Completed' && inputQueryType == 'front_end_query'){
+            let selectedId = get_selected_section_id()
+            const fetchDictCompleted = {
+                                'page':'working_sections',
+                                'query_type':'assign_sections',
+                                'selected_section': selectedId,
+                                'assignment_state':'Completed',
+                                'unpack_type':'essentials',
+                                'sort':'by_storage'}
+            let response = await request_handler('main','get_items',fetchDictCompleted)
+            if(response){
+                console.log(response)
+                if(response['status'] == 'confirmation'){
+                    filteredData = sortTrolleyList(response['data'])
+                }
+            }
+
+        }else{
+            if(inputQueryData.length > 0){
+                filteredData = filterDataByStatus(inputQueryData)
+            }else{
+                
+                filteredData = filterDataByStatus(Data)
+            }
+        }
+
+        
+
+        load_item_query(filteredData)
+        
+        
+    }
+
+})
 
 
 

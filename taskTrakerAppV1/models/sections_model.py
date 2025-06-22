@@ -5,6 +5,7 @@ from sqlalchemy.ext.mutable import MutableList, MutableDict
 from datetime import datetime, timezone
 from flask_login import UserMixin
 
+
 class Roles(db.Model):
     __tablename__ = 'roles'
     role_name = db.Column(String)
@@ -30,6 +31,7 @@ class Users(UserMixin,db.Model):
     email = db.Column(String)
     phone = db.Column(String)
     roles = db.relationship('Users_Roles', back_populates='user',cascade='all, delete-orphan')
+    assign_role = db.Column(Integer)
 
 class Users_Sections(db.Model):
     __tablename__ = 'users_sections'

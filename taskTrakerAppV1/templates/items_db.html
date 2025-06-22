@@ -275,49 +275,75 @@
     </div>
 
     <div class="full-page bg-white gap-3 padding-bottom-3 pageForQueryFilters" id="pageForQueryFilters">
-    <div class="flex-row justify-start items-center padding-2 padding-top-3" id="headerForQueryFilters">
-        <div class="flex-row items-center gap-2 justify-start">
-            <div class="flex-column">
-                <span class="header-20 text-dark-grey">Filters</span>
+        <div class="flex-row justify-start items-center padding-2 padding-top-3" id="headerForQueryFilters">
+            <div class="flex-row items-center gap-2 justify-start">
+                <div class="flex-column">
+                    <span class="header-20 text-dark-grey">Filters</span>
+                </div>
+                <div class="flex-column">
+                    <span class="text-17 text-state text-white" id="filtersState">Not applying</span>
+                </div>
             </div>
-            <div class="flex-column">
-                <span class="text-17 text-state text-white" id="filtersState">Not applying</span>
-            </div>
-        </div>
-        <div class="flex-row justify-end">
-            <div class="flex-column">
-                    <div class="closeItem padding-bottom-2" onclick="openPageBtn(this,'main-page','pageForQueryFilters')">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
+            <div class="flex-row justify-end">
+                <div class="flex-column">
+                        <div class="closeItem padding-bottom-2" onclick="openPageBtn(this,'main-page','pageForQueryFilters')">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="flex-column " id="bodyForQueryFilters">
+        <div class="flex-column " id="bodyForQueryFilters">
             <div class="flex-column width-100">
-            <div class="flex-row gap-2 flex-1 items-center">
-                <div class="horizontal-line"></div>
-                <span class="text text-grey" style="text-wrap: nowrap;">Display query</span>
-                <div class="horizontal-line"></div>
-            </div>
-            <div class="flex-row input-row padding-top-2 padding-bottom-1" style="border-top: none;">
-                <div class="flex-column gap-1 flex-1  padding-top-1">
-                    <span class="text text-dark-grey">Open storages</span>
-                    <input type="checkbox" filter-display-checkbox="open_storages" filter-for="for_display" >
+                <div class="flex-row gap-2 flex-1 items-center">
+                    <div class="horizontal-line"></div>
+                    <span class="text text-grey" style="text-wrap: nowrap;">Display query</span>
+                    <div class="horizontal-line"></div>
                 </div>
-                <div class="input-line-separator"></div>
-                <div class="flex-column gap-1 flex-1  padding-top-1">
-                    <span class="text text-dark-grey">Hide storages</span>
-                    <input type="checkbox" filter-display-checkbox="hide_storages" filter-for="for_display" >
+                <div class="flex-row input-row padding-top-2 padding-bottom-1" style="border-top: none;">
+                    <div class="flex-column gap-1 flex-1  padding-top-1">
+                        <span class="text text-dark-grey">Open storages</span>
+                        <input type="checkbox" filter-display-checkbox="open_storages" filter-for="for_display" >
+                    </div>
+                    <div class="input-line-separator"></div>
+                    <div class="flex-column gap-1 flex-1  padding-top-1">
+                        <span class="text text-dark-grey">Hide storages</span>
+                        <input type="checkbox" filter-display-checkbox="hide_storages" filter-for="for_display" >
+                    </div>
+                </div>
+                    
+            </div>
+            <div class="flex-column width-100 margin-top-6">
+                <div class="flex-row gap-2 flex-1 items-center">
+                    <div class="horizontal-line"></div>
+                    <span class="text text-grey" style="text-wrap: nowrap;">Data base query</span>
+                    <div class="horizontal-line"></div>
+                </div>
+                <div class="flex-row input-row padding-top-2 padding-bottom-2" style="border-top:none;">
+                    <div class="flex-column gap-1 flex-1">
+                        <span class="text text-dark-grey">Storage Type</span>
+                        <select  filter-column="storage_number"   class="select-input-row bg-transparent collect-input-data" style="padding-right: 15px; width: 100%;">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="input-line-separator"></div>
+                    <div class="flex-column gap-1 flex-1">
+                        <span class="text text-dark-grey">Porpuse</span>
+                        <select  filter-column="porpuse"   class="select-input-row bg-transparent collect-input-data" style="padding-right: 15px; width: 100%;">
+                            <option value=""></option>
+                            <option value="Client">Client</option>
+                            <option value="Shop">Shop</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-                
+            
         </div>
-        
-    </div>
-    <div class="flex-column" id="footerForQueryFilters">
-
-    </div>
+        <div class="flex-column margin-push-down" id="footerForQueryFilters">
+            <div class="btn bg-dark" id="btnSaveFiltersQuery">
+                <span class="text-white">Save Filters</span>
+            </div>
+        </div>
     </div>
 
     <div class="flex-column main-page width100 flex-1 gap-3">
@@ -331,36 +357,45 @@
                 </div>
             </div>
         </div>
-        <div class="flex-row padding-bottom-1" style="border-bottom:0.5px solid grey ;">
+        <div class="flex-row padding-bottom-1 padding-right-1" id="statusContainer" style="border-bottom:0.5px solid grey ;">
             <!-- items quantity span -->
-            <div class="flex-column gap-05 flex-1">
-                <span class="text text-grey">Quantity</span>
+            <div class="flex-column gap-1 flex-1 status-bar-info">
+                <span class="text-10 text-grey ">total</span>
                 <div class="flex-row">
-                    
+                    <span data-display="Total"></span>
                 </div>
             </div>
-            <div class="input-line-separator"></div>
-            <!-- items completed -->
-            <div class="flex-column gap-05 flex-1">
-                <span class="text text-grey">Completed</span>
-                <div class="flex-row">
-                    
-                </div>
-            </div>
+           
             <div class="input-line-separator"></div>
             <!-- items active -->
-            <div class="flex-column gap-05 flex-1">
-                <span class="text text-grey">Active</span>
+            <div class="flex-column gap-1 flex-1 status-bar-info" status-value="Active" is-active="false">
+                <span class="text-10 text-grey">Active</span>
                 <div class="flex-row">
-                    
+                    <span data-display="Active"></span>
                 </div>
             </div>
              <div class="input-line-separator"></div>
             <!-- items working -->
-            <div class="flex-column gap-05 flex-1">
-                <span class="text text-grey">Working</span>
+            <div class="flex-column gap-1 flex-1 status-bar-info" status-value="Working" is-active="false">
+                <span class="text-10 text-grey">Working</span>
                 <div class="flex-row">
-                    
+                    <span data-display="Working"></span>
+                </div>
+            </div>
+            <div class="input-line-separator"></div>
+            <!-- items restarted -->
+            <div class="flex-column gap-1 flex-1 status-bar-info" status-value="Storage" is-active="false">
+                <span class="text-10 text-grey">Storage</span>
+                <div class="flex-row">
+                    <span data-display="Storage"></span>
+                </div>
+            </div>
+             <div class="input-line-separator"></div>
+            <!-- items completed -->
+            <div class="flex-column gap-1 flex-1 status-bar-info" status-value="Completed" is-active="false">
+                <span class="text-10 text-grey" >Completed</span>
+                <div class="flex-row">
+                    <span data-display="Completed"></span>
                 </div>
             </div>
         </div>
@@ -465,6 +500,18 @@
 <script src="{{url_for('static', filename='js/inject_data_select.js')}}"></script>
 <script>
     let storageMap = {{storages_map  | safe}}
+    const queryFilterStorageUnit = document.querySelector('[filter-column="storage_number"]')
+
+    Object.keys(storageMap).forEach(unit =>{
+        storageMap[unit].forEach(strNumber =>{
+            let option = document.createElement('option')
+            option.value = strNumber
+            option.innerHTML = strNumber
+            queryFilterStorageUnit.appendChild(option)
+        })
+        
+    })
+
 </script>
 <script src="{{url_for('static', filename='js/custom_checkbox_svg.js')}}"></script>
 <script src="{{url_for('static', filename='js/upload_picture.js')}}"></script>
@@ -475,9 +522,16 @@
 <script src="{{url_for('static', filename='js/edit_item_interactions.js')}}"></script>
 
 <script>
-    let fetchDictFirstLoad ={'query_type':'all','unpack_type':'essentials','sort':'by_storage'}
+   
+    window.onload = function(){
+        let fetchDictFirstLoad ={'query_type':'all','unpack_type':'essentials','sort':'by_storage','get_counts':'state'}
+        
+        if(Object.keys(queryFiltersDict['for_query']).length > 0 ){
+            fetchDictFirstLoad['user_filters'] = queryFiltersDict['for_query']
+        }
+        first_load_query(fetchDictFirstLoad)
+    }
     
-    first_load_query(fetchDictFirstLoad)
 </script>
 
 

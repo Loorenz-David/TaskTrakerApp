@@ -352,9 +352,9 @@
                 </div>
             </div>
         </div>
-        <div class="flex-row padding-bottom-1 padding-right-1" style="border-bottom:0.5px solid grey ;">
+        <div class="flex-row padding-bottom-1 padding-right-1 padding-left-05" id="statusContainer" style="border-bottom:0.5px solid grey ;">
              <!-- items active -->
-            <div class="flex-column gap-1 flex-1">
+            <div class="flex-column gap-1 flex-1 status-bar-info " status-value="Active" is-active="false">
                 <span class="text-10 text-grey">Active</span>
                 <div class="flex-row">
                     <span data-display="Active"></span>
@@ -362,7 +362,7 @@
             </div>
             <div class="input-line-separator"></div>
              <!-- items working -->
-            <div class="flex-column gap-1 flex-1">
+            <div class="flex-column gap-1 flex-1 status-bar-info  " status-value="Working" is-active="false">
                 <span class="text-10 text-grey">Working</span>
                 <div class="flex-row">
                     <span data-display="Working" class=""></span>
@@ -370,7 +370,7 @@
             </div>
             <div class="input-line-separator"></div>
             <!-- items Paused span -->
-            <div class="flex-column gap-1 flex-1">
+            <div class="flex-column gap-1 flex-1 status-bar-info" status-value="Paused" is-active="false">
                 <span class="text-10 text-grey">Paused</span>
                 <div class="flex-row">
                     <span data-display="Paused"> </span>
@@ -378,7 +378,7 @@
             </div>
         
             <div class="input-line-separator"></div>
-            <div class="flex-column gap-1 flex-1">
+            <div class="flex-column gap-1 flex-1 status-bar-info" status-value="Restart" is-active="false">
                 <span class="text-10 text-grey">Restart</span>
                 <div class="flex-row">
                     <span data-display="Restart"> </span>
@@ -387,7 +387,7 @@
         
             <div class="input-line-separator"></div>
             <!-- items completed -->
-            <div class="flex-column gap-1 flex-1">
+            <div class="flex-column gap-1 flex-1 status-bar-info" status-value="Completed" is-active="false">
                 <span class="text-10 text-grey">Completed</span>
                 <div class="flex-row">
                     <span data-display="Completed"></span>
@@ -552,7 +552,7 @@
 </script>
 <script src="{{url_for('static', filename='js/open_close_popup.js')}}"></script>
 <script src="{{url_for('static', filename='js/close_open_page.js')}}"></script>
-<script src="{{url_for('static',filename='js/custom_select.js')}}"></script>
+
 <script src="{{url_for('static',filename='js/change_display_counter.js')}}"></script>
 <!-- <script src="{{url_for('static', filename='js/print_connection.js')}}"></script>
 <script src="{{url_for('static', filename='js/print_work_labels.js')}}"></script> -->
@@ -563,6 +563,7 @@
 
 <script src="{{url_for('static', filename='js/item_query_interaction.js')}}"></script>
 <script src="{{url_for('static',filename='js/working_sections_query.js')}}"></script>
+<script src="{{url_for('static',filename='js/custom_select.js')}}"></script>
 
 
 {% endblock %}
