@@ -44,7 +44,7 @@ def working_sections():
 
             
             assign_sections.append(section_dict)
-    assign_sections = sorted(assign_sections, key=lambda x:(x['section_order']))
+    assign_sections = sorted(assign_sections, key=lambda x:(x['section_order'] if x['section_order'] is not None else 0))
 
     sections_list = get_sections()
 
