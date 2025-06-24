@@ -209,6 +209,6 @@ def get_sections(get_icon=False):
         if get_icon:
             temp_dict['icon'] = section.section_icon
         sections_list.append(temp_dict)
-    sections_list = sorted(sections_list,key=lambda x: (x['section_order']))
+    sections_list = sorted(sections_list,key=lambda x: (x['section_order'] if x['section_order'] is not None else 0))
     
     return sections_list
