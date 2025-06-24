@@ -2,6 +2,7 @@ from taskTrakerAppV1 import models
 from taskTrakerAppV1.models.sections_model import Storage_Unit, Sections
 
 from sqlalchemy.orm import RelationshipProperty
+from sqlalchemy.orm.base import instance_state
 
 columns_to_unpack_dict = {
                     'Users': 
@@ -15,7 +16,9 @@ columns_to_unpack_dict = {
                                                                   'column_target':['id','section_name']
                                                                   }
                                         ], 
-                            'for_editing':['phone','email']
+                            'for_editing':['phone','email',{'relationship':'assign_sections',
+                                                            'map':['main_section','section_id'],
+                                                            'column_target':['main_section','section_id']}]
                         },
                     'Roles': 
                     {
@@ -28,14 +31,14 @@ columns_to_unpack_dict = {
                     },
                     'Sections': 
                     {
-                        'essentials':['id','section_name','section_icon',{'relationship':'assign_task',
+                        'essentials':['id','section_name','section_icon','section_order',{'relationship':'assign_task',
                                                                             'map':['task'],
                                                                             'column_target':['id','task_name']
                                                                             }
                                     ], 
                         'for_editing':[{'relationship':'assign_task',
-                                         'map':[],
-                                         'column_target':['order_indx','task_id']}]
+                                         'map':['order_indx','task_id'],
+                                         'column_target':[]}]
                     },
                     'Tasks': 
                     {
@@ -62,6 +65,12 @@ columns_to_unpack_dict = {
                     
 
                         } 
+
+
+def is_sqlalchemy_obj(obj):
+    return hasattr(obj,'__class__') and hasattr(obj,'_sa_instance_state')
+
+
 # must think on how to fix the logic for creation an item class and item type
 #'Items_Types_Classes': 
 #                    {
@@ -77,10 +86,8 @@ def unpack_data(obj, model_name ,columns_to_unpack ,seen= None, ):
 
     
     
-    
-    print(columns_to_unpack,'debuggin roles')
     selected_dict_col = columns_to_unpack_dict.get(model_name,None)
-    
+   
     
     if not selected_dict_col:
         raise Exception('no columns to unpack found with that module name')
@@ -100,19 +107,35 @@ def unpack_data(obj, model_name ,columns_to_unpack ,seen= None, ):
             if isinstance(column,dict):
                 relationship_name = column['relationship']
                 value = getattr(obj,relationship_name)
-                
+               
+
                 if isinstance(value,list):
+                  
                     results[relationship_name] = []
                     
                     for obj_rel  in value:
                         rel_dict = {}
-                        target_obj = obj_rel
-                        for map_key in column['map']:
-                            target_obj = getattr(target_obj,map_key)
+                        
 
-                        for column_rel in column['column_target']:
-                            rel_dict[column_rel] =  getattr(target_obj,column_rel)
+                        for map_key in column['map']:
+                            
+                            target_value = getattr(obj_rel,map_key)
+                           
+
+                            if is_sqlalchemy_obj(target_value):
+                                
+                                for column_rel in column['column_target']:
+                                    attr = getattr(target_value,column_rel)
+                                    if attr:
+                                        rel_dict[column_rel] =  attr
+                                    else:
+                                        continue
+                            else:
+                                rel_dict[map_key] = target_value
+
                         results[relationship_name].append(rel_dict) 
+                        
+                    
                 else:
                     rel_dict = {}
                     target_obj = value
@@ -143,8 +166,7 @@ def query_dbs(data):
     unpacked_data = None
     if data['query'] == 'all':
         query = model.query.all()
-        print(model)
-        print(query,'query all')
+        
         unpacked_data = []
         for obj in query:
             unpacked_data.append(unpack_data(obj,model_name,data['columns_to_unpack']))
@@ -181,9 +203,12 @@ def get_sections(get_icon=False):
     sections_list = []
     for section in query_sections:
         temp_dict = {'section_name':section.section_name,
-                     'id':section.id}
+                     'section_order':section.section_order,
+                     'id':section.id,
+                     }
         if get_icon:
             temp_dict['icon'] = section.section_icon
         sections_list.append(temp_dict)
-
+    sections_list = sorted(sections_list,key=lambda x: (x['section_order']))
+    
     return sections_list

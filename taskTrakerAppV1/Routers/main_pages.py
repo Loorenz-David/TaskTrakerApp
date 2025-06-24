@@ -37,10 +37,18 @@ def working_sections():
         query_section = Sections.query.get(int(section.section_id))
         if query_section:
             section_dict = {'id':query_section.id,'section_name':query_section.section_name,'section_icon':query_section.section_icon}
+            section_order = query_section.section_order
+            if section.main_section:
+                section_order = 0
+            section_dict['section_order'] = section_order
+
             
             assign_sections.append(section_dict)
+    assign_sections = sorted(assign_sections, key=lambda x:(x['section_order']))
 
     sections_list = get_sections()
+
+    
     
 
     return render_template('working_sections.html',user=user,assign_sections=assign_sections,sections_list = sections_list)

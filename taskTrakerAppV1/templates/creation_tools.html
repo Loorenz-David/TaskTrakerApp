@@ -311,13 +311,14 @@
 
                     <!-- section name input -->
                     <div class="flex-column gap-1 flex-1 items-start padding-top-1">
-                        <span class="text text-dark-grey">Section name:</span>
+                        <span class="text text-dark-grey">Section Name:</span>
                         <input class="inputInfo input-noline input-size-15" name="section_name" type="text" value="">
                     </div>
-                    
-
-                    <!-- add more inputs if need it under -->
-                    <!-- <div class="input-line-separator"></div> -->
+                    <div class="input-line-separator"></div>
+                    <div class="flex-column gap-1 flex-1 items-start padding-top-1">
+                        <span class="text text-dark-grey">Section Order:</span>
+                        <input class="inputInfo input-noline input-size-15" name="section_order" type="number" value="">
+                    </div>
                     
                 </div>
                 
@@ -475,9 +476,21 @@
                 <span target-input="3" class="text-17 text-dark-grey"></span>
             </div>
         </div>  
+       
         
     </div>
 </template>
+
+<template id="TemplatecustomCheckbox_main_section">
+     <label class="custom-checkbox-yellow">
+            <input class="inputInfo"  target-input="4" name="main_section" type="checkbox">
+            <span class="checkmark"></span>
+        </label>
+</template>
+
+
+
+
 <template id="TemplatecustomCheckbox_order_indx">
     <div class="flex-row " style="width: 60px;" >
             <input class="inputInfo" name="order_indx" type="number" style="text-align: center;" target-input="4">

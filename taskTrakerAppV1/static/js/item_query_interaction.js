@@ -9,6 +9,7 @@ const inputQuerySearch = document.getElementById('inputQuery')
 const pageForQueryFilters = document.getElementById('pageForQueryFilters')
 const filtersState = document.getElementById('filtersState')
 const btnSaveFiltersQuery = document.getElementById('btnSaveFiltersQuery')
+const btnClearFiltersQuery = document.getElementById('btnClearFilters')
 const inputQueryType = inputQuerySearch.getAttribute('query-type')
 const statusContainer = document.getElementById('statusContainer')
 
@@ -66,6 +67,7 @@ function saveFiltersToStorage(targetKey=undefined,filter_for=undefined){
     localStorage.setItem('saveQueryFilters',JSON.stringify(storeFilters))
 
 }
+
 
 function open_close_target_storage(targetStorage,open){
     let storageArrow = targetStorage.querySelector('.arrow')
@@ -278,8 +280,9 @@ function load_item_query(data = undefined){
             if(item.assign_sections){
                 let workingStatusesContainer = cloneItemContainer.querySelector("[data-value='workingStatusesContainer']")
                 let cloneIcons = templateSectionIcons.content.cloneNode(true)
-
-                item.assign_sections.forEach(section =>{
+                
+                let sorted_assign_sections = item.assign_sections.sort((a,b) => a.section_order - b.section_order)
+                sorted_assign_sections.forEach(section =>{
                     
                     let targetIcon = cloneIcons.querySelector(`[id-value = "${section.section_name}"]`)
                     
@@ -500,6 +503,31 @@ if(btnSaveFiltersQuery){
             location.reload()
     })
 
+    
+
+}
+if(btnClearFiltersQuery){
+    btnClearFiltersQuery.addEventListener('click',(e)=>{
+            const allFilterQuerys = pageForQueryFilters.querySelectorAll('[filter-column]').forEach(input =>{
+            let value = ''
+            input.value = ''
+            let columnTarget = input.getAttribute('filter-column')
+            queryFiltersDict['for_query'][columnTarget] = {'attribute':'filter-column',
+                                                        'value': value
+                }
+            if(value !== ''){ 
+                saveFiltersToStorage(columnTarget,'for_query')
+                interactedWithFilter = true
+            
+            }else{
+                saveFiltersToStorage(columnTarget,'for_query')
+                delete queryFiltersDict['for_query'][columnTarget]
+                
+            }
+
+             location.reload()
+        })
+    })
 }
 
 
@@ -583,7 +611,7 @@ statusContainer.addEventListener('click',async (e)=>{
                                 'page':'working_sections',
                                 'query_type':'assign_sections',
                                 'selected_section': selectedId,
-                                'assignment_state':'Completed',
+                                'assignment_state':['Completed'],
                                 'unpack_type':'essentials',
                                 'sort':'by_storage'}
             let response = await request_handler('main','get_items',fetchDictCompleted)

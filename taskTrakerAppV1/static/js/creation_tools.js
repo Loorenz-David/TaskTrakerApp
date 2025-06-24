@@ -238,7 +238,7 @@ function load_db_data(data, menuValue){
 let mappingCreationsFileds = {
                                 'Users':{
                                     'input_map':[
-                                                {'model':'sections','input_type':'customCheckbox','values':[['id',1,'value','id'],['section_icon',2],['section_name',3]]},
+                                                {'model':'sections','input_type':'customCheckbox','value_in_relationship':'main_section','values':[['id',1,'value','id'],['section_icon',2],['section_name',3]]},
                                                 {'model':'roles','input_type':'select','values':[['role_name',1,'value','id']]}
                                             ]
                                 },
@@ -291,13 +291,17 @@ async function load_creation_inputs(modelName){
                 dataDict.forEach(fetchObj =>{
                     let cloneTemplate = templateOption.content.cloneNode(true)
                     inputMap['values'].forEach(targetElement =>{
+                        
+
                         let targetInTemplate = cloneTemplate.querySelector(`[target-input="${targetElement[1]}"]`)
                         targetInTemplate.innerHTML = fetchObj[targetElement[0]]
                         if (targetElement.length > 2){
+
                             if(targetElement[2] == 'value'){
                                 targetInTemplate.name = inputMap['model']
                                 targetInTemplate.value = fetchObj[targetElement[3]]
                             }
+                            
                         }
                     })
                     if(templateValueInRel){
@@ -322,13 +326,13 @@ let mappRequiredField = {
                                 'fields':['username','email','phone','password'],
                                 'relationships':[
                                     {'many_to_many':'Users_Roles','target_model':'roles','values':[]},
-                                    {'many_to_many':'Users_Sections','target_model':'sections','values':[]}
+                                    {'many_to_many':'Users_Sections','target_model':'sections','values':[],'value_in_relationship':'main_section'}
                                 ]
                             },
                             'Sections':
                             {
                                 'requiredInputs':['section_name','tasks'],
-                                'fields':['section_name'],
+                                'fields':['section_name','section_order'],
                                 'relationships':[
                                     {'many_to_many':'Tasks_Sections','target_model':'tasks','values':[],'value_in_relationship':'order_indx'}
                                 ]
@@ -444,9 +448,26 @@ async function create_edit_obj(modelName,inputContainer,targetBackEnd,clickBtn,S
                                         .map(input => {
                                             if('value_in_relationship' in relationMap && input.type === 'checkbox'){
 
-                                                value_in_relation = filledFields.find(inputrel =>{return inputrel.getAttribute('belongs_to')?.trim()=== input.value})
-                                                console.log(value_in_relation)
-                                                return {'value':input.value, 'value_in_relation': value_in_relation.value,'column_in_relation':relationMap['value_in_relationship']}
+                                                value_in_relation = filledFields.find(inputrel =>{return inputrel.getAttribute('belongs_to')?.trim() === input.value})
+                                                console.log(input, input.value)
+                                                console.log(filledFields,'fileds')
+                                                console.log(value_in_relation,'value in relation found!!!!!!!!')
+                                                let target_value_in_relation;
+                                                if(value_in_relation){
+                                                    if( value_in_relation.type === 'checkbox'){
+                                                        target_value_in_relation = value_in_relation.checked
+                                                    }
+                                                    else{
+                                                    target_value_in_relation = value_in_relation.value
+                                                    }
+
+                                                    return {'value':input.value, 'value_in_relation': target_value_in_relation,'column_in_relation':relationMap['value_in_relationship']}
+
+                                                }
+                                                else{
+                                                    return input.value
+                                                }
+                                                
                                             }
                                             else{
                                                 return input.value
@@ -513,7 +534,7 @@ let EditMapFields = {
         'Users':{
             'header_edit_page':'User',
             'preLoadFields':[{'attribute-value':'username','type':'input'}],
-            'postLoadFields':[{'attribute-value':'email','type':'input'},{'attribute-value':'phone','type':'input'}],
+            'postLoadFields':[{'attribute-value':'email','type':'input'},{'attribute-value':'phone','type':'input'},{'attribute-value':'main_section','type':'input','belongs_to':{'target_col':'assign_sections','target_key':'section_id','value_key':'main_section'}}],
             'relationships':[
                 {'model_in_dic':'assign_sections','model_in_container':'sections','input_type':'checkbox'},
                 {'model_in_dic':'roles','model_in_container':'roles','input_type':'select'}
@@ -522,8 +543,8 @@ let EditMapFields = {
         },
           'Sections':{
             'header_edit_page':'Section',
-            'preLoadFields':[{'attribute-value':'section_name','type':'input'}],
-            'postLoadFields':[{'attribute-value':'order_indx','type':'input','belongs_to':'assign_task'}],
+            'preLoadFields':[{'attribute-value':'section_name','type':'input'},{'attribute-value':'section_order','type':'input'}],
+            'postLoadFields':[{'attribute-value':'order_indx','type':'input','belongs_to':{'target_col':'assign_task','target_key':'task_id','value_key':'order_indx'}}],
             'relationships':[
                 {'model_in_dic':'assign_task','model_in_container':'tasks','input_type':'checkbox'},
             
@@ -560,13 +581,22 @@ function fillTargetInput(mapFields, objContianer,objData){
     mapFields.forEach(targetField =>{
         let inputField;
         if('belongs_to' in targetField){
+            let belongs_to = targetField['belongs_to']
             
-            objData = objData[targetField['belongs_to']]
-
+            objData = objData[belongs_to['target_col']]
+            
             objData.forEach(objDict =>{
                 console.log(objDict, 'in loop')
-                let inputField = objContianer.querySelector(`${targetField['type']}[name="${targetField['attribute-value']}"][belongs_to="${objDict['task_id']}"]`)
-                inputField.value = objDict['order_indx']
+                let inputField = objContianer.querySelector(`${targetField['type']}[name="${targetField['attribute-value']}"][belongs_to="${objDict[belongs_to['target_key']]}"]`)
+                let valueInDict =  objDict[belongs_to['value_key']]
+                console.log(inputField,'input field !!!')
+                if(inputField.type === 'checkbox'){
+                    inputField.checked = valueInDict
+                }
+                else{
+                    inputField.value = valueInDict
+                }
+                
             })
             
         }else{
@@ -611,12 +641,14 @@ async function organize_edit_obj(passArgs,actionDict){
 
     if('relationships' in targetEditMap){
         let relationship = targetEditMap['relationships']
+        
         relationship.forEach(targetRelationship =>{
             objData[targetRelationship['model_in_dic']].forEach(dataRel =>{
                 if(targetRelationship['input_type'] == 'checkbox'){
                     let targetCheckbox = editObjContainer.querySelector(`input[name='${targetRelationship['model_in_container']}'][value='${dataRel['id']}']`)
                     targetCheckbox.checked = true
                 }
+               
                 else if(targetRelationship['input_type'] == 'select'){
                     let targetSelect = editObjContainer.querySelector(`select[name='${targetRelationship['model_in_container']}' `)
                     targetSelect.value = dataRel['id']

@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function (){
                                 'page':'working_sections',
                                 'query_type':'assign_sections',
                                 'selected_section': selectedId,
-                                'assignment_state':'not-Completed',
+                                'assignment_state':['not','Completed','In-Storage'],
                                 'unpack_type':'essentials',
                                 'sort':'by_storage',
                                 'get_counts':'state'}

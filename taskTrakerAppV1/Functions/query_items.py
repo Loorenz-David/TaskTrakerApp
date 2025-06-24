@@ -191,7 +191,8 @@ def unpack_item(item,unpack_type):
             working_section_dict = {'id': working_section.id,
                                     'state':working_section.state,
                                     'section_name':working_section.section.section_name,
-                                    'section_id':working_section.section.id}
+                                    'section_id':working_section.section.id,
+                                    'section_order':working_section.section.section_order}
             work_in_progress_list.append(working_section_dict)
                      
         unpacked_item['assign_sections'] = work_in_progress_list
@@ -306,6 +307,7 @@ def unpack_assignment(unpack_type,obj):
             'start_time':obj.start_time,
             'end_time':obj.end_time,
             'item_id':obj.item_id,
+            
         }
 
         work_in_progress_list = []
@@ -314,7 +316,8 @@ def unpack_assignment(unpack_type,obj):
             working_section_dict = {'id': working_section.id,
                                     'state':working_section.state,
                                     'section_name':working_section.section.section_name,
-                                    'section_id':working_section.section.id}
+                                    'section_id':working_section.section.id,
+                                    'section_order':working_section.section.section_order}
             work_in_progress_list.append(working_section_dict)
                         
         unpacked_dict['assign_sections'] = work_in_progress_list
@@ -372,11 +375,17 @@ def query_assignments(data):
     if data.get('assignment_state'):
         state = data['assignment_state']
         
-        if 'not' in state:
-            state = state.split('-')[1]
-            query = query.filter(Items_Sections.state != state).all()
+        if 'not' in state[0]:
+            state.remove('not')
+            
+            query = query.filter(~Items_Sections.state.in_(state))
+            if 'In-Storage' in state:
+                query = query.join(Items_Sections.item).filter(Items.state != 'In-Storage')
+
+            query = query.all()
+            
         else:
-            query = query.filter(Items_Sections.state == state).all()
+            query = query.filter(Items_Sections.state.in_(state)).all()
 
     
     count_results = {}

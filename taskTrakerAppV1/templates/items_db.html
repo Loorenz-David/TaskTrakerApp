@@ -79,6 +79,7 @@
                 <div class="flex-column justify-end flex-1">
                     <select class="select-input-row  text text-white tag collect-input-data" style="padding: 3px  !important; background-color: #19805F !important;" data-value="state" id="changeItemState" >
                         <option value="Active" >Active</option>
+                        <option value="In-Storage">In-Storage</option>
                         <option value="Working" >Working</option>
                         <option value="Restart" >Restart</option>
                         <option value="Completed" >Completed</option>
@@ -99,7 +100,8 @@
        
         <div class="flex-column width-100"  id="ImageObjContainer">
             <div class="flex-row" id="imageSlider">
-                <div id="takeOrUploadPicture" class="flex-column gap-2 justify-center items-center padding-2" style="width: 350px; height: 350px; border:1px dashed grey;display:none; " >
+
+                <div id="takeOrUploadPicture" class="flex-column gap-2 justify-center items-center padding-2 hide" style="width: 350px; height: 350px; border:1px dashed grey; " >
                   <div class="flex-row">
                     <label for="UploadInput" class="btn" style="border: 1px solid rgb(108, 108, 249);">
                         <span class="text-17" style="color: rgb(108, 108, 249);"> Upload Picture</span>
@@ -110,19 +112,22 @@
                             id="UploadInput"
                             style="display: none; ">
                     
+                    </div>
+                    <div class="flex-row">
+                        <label for="cameraInput" class="btn bg-blue">
+                            <span class="text-17"> Take Picture</span>
+                            <div class="spinner-20"  style="display: none;"></div>
+                        </label>
+                        <input type="file" 
+                                accept="image/*" 
+                                capture="environment" 
+                                id="cameraInput"
+                                style="display: none; ">
+                        
+                    </div>
                 </div>
-                <div class="flex-row">
-                    <label for="cameraInput" class="btn bg-blue">
-                        <span class="text-17"> Take Picture</span>
-                        <div class="spinner-20"  style="display: none;"></div>
-                    </label>
-                    <input type="file" 
-                            accept="image/*" 
-                            capture="environment" 
-                            id="cameraInput"
-                            style="display: none; ">
-                    
-                </div>
+                <div class="flex-row hide" id="imageContainerSlider">
+
                 </div>
             </div>
         </div>
@@ -339,7 +344,10 @@
             </div>
             
         </div>
-        <div class="flex-column margin-push-down" id="footerForQueryFilters">
+        <div class="flex-column gap-2 margin-push-down" id="footerForQueryFilters">
+            <div class="btn " id="btnClearFilters" style="border: 1px solid rgb(63, 63, 63);">
+                <span style="color: rgb(63, 63, 63);">Clear Filters</span>
+            </div>
             <div class="btn bg-dark" id="btnSaveFiltersQuery">
                 <span class="text-white">Save Filters</span>
             </div>
@@ -384,10 +392,10 @@
             </div>
             <div class="input-line-separator"></div>
             <!-- items restarted -->
-            <div class="flex-column gap-1 flex-1 status-bar-info" status-value="Storage" is-active="false">
-                <span class="text-10 text-grey">Storage</span>
+            <div class="flex-column gap-1 flex-1 status-bar-info" status-value="In-Storage" is-active="false">
+                <span class="text-10 text-grey">In-Storage</span>
                 <div class="flex-row">
-                    <span data-display="Storage"></span>
+                    <span data-display="In-Storage"></span>
                 </div>
             </div>
              <div class="input-line-separator"></div>

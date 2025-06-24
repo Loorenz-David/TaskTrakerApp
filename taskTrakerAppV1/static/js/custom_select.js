@@ -27,7 +27,7 @@ dropdown.addEventListener('click', (e) => {
 
     dropdown.classList.remove('open');
     arrow.classList.remove('open');
-     blurBackground.classList.add('hide')
+    blurBackground.classList.toggle('hide')
     
     if(customSelectWorkingSections){
         let selectedId = get_selected_section_id()
@@ -40,7 +40,7 @@ dropdown.addEventListener('click', (e) => {
                                 'page':'working_sections',
                                 'query_type':'assign_sections',
                                 'selected_section': selectedId,
-                                'assignment_state':'not-Completed',
+                                'assignment_state':['not','Completed','In-Storage'],
                                 'unpack_type':'essentials',
                                 'sort':'by_storage',
                                 'get_counts':'state'}

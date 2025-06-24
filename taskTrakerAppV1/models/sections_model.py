@@ -31,14 +31,14 @@ class Users(UserMixin,db.Model):
     email = db.Column(String)
     phone = db.Column(String)
     roles = db.relationship('Users_Roles', back_populates='user',cascade='all, delete-orphan')
-    assign_role = db.Column(Integer)
+    
 
 class Users_Sections(db.Model):
     __tablename__ = 'users_sections'
     id = db.Column(db.Integer, primary_key= True)
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
     section_id= db.Column(db.Integer,db.ForeignKey('sections.id'))
-
+    main_section = db.Column(Boolean)
     user = db.relationship('Users', back_populates="assign_sections")
     section = db.relationship('Sections', back_populates="assign_users")
     
@@ -80,6 +80,7 @@ class Sections(db.Model):
     pauses_reasons = db.relationship('Pauses_Reasons_Sections', back_populates='section',cascade='all, delete-orphan')
     association_tasks_items = db.relationship('Tasks_Items', back_populates='section', cascade='all, delete-orphan')
 
+    section_order = db.Column(Integer)
 
 # state: Incompleted
 #state: Active
@@ -114,6 +115,7 @@ class Storage_Unit(db.Model):
 # state Working: someone has started to work with it
 # state Completed: the item is restored
 # state Restart: the item was completed and now is being restarted
+# In-Storage: the item was added it can't be seen by working sections
 
 class Items (db.Model):
     __tablename__ = 'items'
@@ -138,7 +140,7 @@ class Items (db.Model):
     porpuse = db.Column(String) # is it a client order, or for shop
     item_came_back = db.Column(JSON) # if the item was fixed and came back because of issues {came_back_from: "client",reason:[the reson],issues:[list of issues]}
     item_problems = db.Column(JSON) #simple input {"list of issues": ['not stable',"seat unstable"]}
-    state = db.Column(String, default='Active')
+    state = db.Column(String, default='In-storage')
     images_url = db.Column(JSON)
     
     meta_fields_items = db.Column(MutableDict.as_mutable(JSON), default=dict) # a column to add new columns as keys

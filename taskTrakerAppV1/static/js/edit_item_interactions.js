@@ -88,18 +88,20 @@ async function load_selected_item(itemData,itemId,section=undefined){
     
     
     // fix logic to load images 
-    
-    if(itemData['images_url']){
-        takeOrUploadImg.style.display = 'none'
+    console.log(itemData['images_url'])
+    if(itemData['images_url'] && itemData['images_url'].length > 0){
+        removeActionContainer()
         itemData['images_url'].forEach(url =>{
             let cloneTemplateImg = TemplateImgForSlider.content.cloneNode(true)
             cloneTemplateImg.querySelector('img').src = url
             let removeBtn = cloneTemplateImg.querySelector('.removeImgBtn')
             removeBtn.setAttribute('data-id',itemData['id'])
-            imgSlider.append(cloneTemplateImg)
+            imageContainerSlider.append(cloneTemplateImg)
         })
     }else{ 
-        takeOrUploadImg.style.display = 'flex'
+        
+        showActionContainer()
+        
     }
     
 
@@ -252,12 +254,11 @@ btnSaveItem.addEventListener('click',async  (e)=>{
 
         }
     }
-    if(deletedPicture){
-        modifyData['deleted_picture'] = true 
-    }
-    if(imgUrl.length > 0){
-        modifyData['simple_inputs']['images_url'] = imgUrl
-    }
+    
+    
+    modifyData['simple_inputs']['images_url'] = imgUrl
+    
+    
 
     console.log(modifyData,'before if')
     if(Object.keys(modifyData).length > 2 || Object.keys(modifyData['simple_inputs']).length > 0){
@@ -265,7 +266,7 @@ btnSaveItem.addEventListener('click',async  (e)=>{
         let response = await request_handler('main','edit_item',modifyData)
        
         if(response['status'] == 'confirmation'){
-            
+            console.log(modifyData,response)
             location.reload()
         }
         else{

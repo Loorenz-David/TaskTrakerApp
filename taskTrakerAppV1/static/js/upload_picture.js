@@ -12,12 +12,12 @@ let imgUrl = []
 let deletedPicture = false
 
 function removeActionContainer(){
-    takeOrUploadPicture.style.display = 'none'
+    takeOrUploadPicture.classList.add('hide') 
     imageContainerSlider.classList.remove('hide')
 }
 function showActionContainer(){
     imageContainerSlider.classList.add('hide')
-    takeOrUploadPicture.style.display = 'flex'
+    takeOrUploadPicture.classList.remove('hide') 
 }
 
 function add_remove_spinner(input){
@@ -62,12 +62,12 @@ async function process_image(file,input){
 
             canvas.toBlob( async(blob) =>{
                 
-                console.log(blob)
+            
                 // fix logic to send picture to back end
                 uploadedPicture = true
                 const formData = new FormData()
                 formData.append('image',blob,'image.webp')
-                console.log(formData)
+              
                 let response = fetch('/main/jsserving/upload_picture',{
                     method:'POST',
                     body:formData
@@ -79,10 +79,10 @@ async function process_image(file,input){
                         fetch_message(response)
                         let preview = imgContainer.querySelector('img')
                         preview.src = response['picture_url']
-                        imgUrl = [response['picture_url']]
+                        imgUrl.push(response['picture_url'])
                         imageContainerSlider.appendChild(imgContainer)
                         removeActionContainer()
-                        
+                       
                     }
                     else{
                         fetch_message(response)
@@ -161,10 +161,14 @@ async function removeUploadedPicture(btn){
     if(response['status'] == 'confirmation'){
         fetch_message(response)
         parent.remove()
-
+       
         if(imageContainerSlider.children.length == 0){
             showActionContainer()
             
+        }
+        let findUrlInList = imgUrl.findIndex(item => item === url)
+        if(findUrlInList !== -1){
+            imgUrl.splice(findUrlInList,1)
         }
         
         deletedPicture = true
