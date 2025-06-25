@@ -431,10 +431,10 @@ def api_create_item():
         return jsonify(response)
     
     data = request.json
-
+    print(data,'receiving data from heroku app')
     try:
         response_creation_item = add_items_db(data)
-
+        
         if response_creation_item == 'ok':
             print('')
             print('')
