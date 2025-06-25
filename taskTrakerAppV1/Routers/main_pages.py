@@ -433,11 +433,16 @@ def api_create_item():
     data = request.json
 
     try:
-        response_creation_item = adding_item(data)
+        response_creation_item = add_items_db(data)
 
         if response_creation_item == 'ok':
+            print('')
+            print('')
+            print('item was created through api key!!!!! ')
+            print('')
+            print('')
             response['status'] = 'confirmation'
-            response['item created in pythonAnywhere app']
+            
     except Exception as e:
         print(e)
         response['error_message'] = str(e)
