@@ -195,10 +195,11 @@ def items_db():
 
 @main.route('/main/jsserving/adding_item', methods=['POST'])
 @login_required
-def adding_item():
+def adding_item(data=None):
     response = {'message':'something went wrong check, check console log','status':'alert'}
     
-    data = request.json
+    if not data:
+        data = request.json
 
     if data:
         try:
@@ -415,4 +416,36 @@ def get_stats():
         
 
     return jsonify(response)
+
+
+
+
+
+API_KEY = os.environ.get('INCOMING_API_KEY')
+@main.route('/api/items',methods=['POST'])
+def api_create_item():
+    response =  response = {'message':'something went wrong check, check console log','status':'alert'}
+    auth_header = request.headers.get('Authorization')
+    if auth_header != f"Bearer {API_KEY}":
+        response['message'] = 'Unauthorized'
+        return jsonify(response)
+    
+    data = request.json
+
+    try:
+        response_creation_item = adding_item(data)
+
+        if response_creation_item == 'ok':
+            response['status'] = 'confirmation'
+            response['item created in pythonAnywhere app']
+    except Exception as e:
+        print(e)
+        response['error_message'] = str(e)
+        response['status'] = 'error'
+        response['message'] = 'request fail to create item'
+    
+    return jsonify(response)
+
+
+
 
