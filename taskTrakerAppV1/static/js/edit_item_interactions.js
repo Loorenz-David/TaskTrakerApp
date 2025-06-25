@@ -255,12 +255,15 @@ btnSaveItem.addEventListener('click',async  (e)=>{
         }
     }
     
+    if(deletedPicture || uploadedPicture){
+        modifyData['simple_inputs']['images_url'] = imgUrl
+    }
     
-    modifyData['simple_inputs']['images_url'] = imgUrl
+    
     
     
 
-    console.log(modifyData,'before if')
+    
     if(Object.keys(modifyData).length > 2 || Object.keys(modifyData['simple_inputs']).length > 0){
         modifyData['item_id'] = itemId
         let response = await request_handler('main','edit_item',modifyData)

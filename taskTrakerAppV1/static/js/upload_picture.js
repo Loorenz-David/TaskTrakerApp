@@ -82,7 +82,8 @@ async function process_image(file,input){
                         imgUrl.push(response['picture_url'])
                         imageContainerSlider.appendChild(imgContainer)
                         removeActionContainer()
-                       
+                        uploadedPicture = true
+                        deletedPicture = false
                     }
                     else{
                         fetch_message(response)
@@ -172,6 +173,7 @@ async function removeUploadedPicture(btn){
         }
         
         deletedPicture = true
+        uploadedPicture = false
     }
 
     spinner.style.display = 'none'
