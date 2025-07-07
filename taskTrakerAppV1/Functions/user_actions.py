@@ -316,7 +316,8 @@ def modify_item(data):
     response = {}
     query_item = Items.query.get(int(data['item_id']))
 
-   
+    print(query_item, query_item.storage_number)
+    print('---debugging storage number ----')
     set_time = datetime.now(timezone.utc)
     
     if data.get('simple_inputs'):
@@ -324,6 +325,10 @@ def modify_item(data):
        
         for key, value in simple_inputs.items():
             setattr(query_item,key,value)
+            print('setting key...',key, value)
+
+    print(query_item, query_item.storage_number)
+    print('--- after modification----')
         
 
     if data.get('deleted_picture') and data.get('deleted_picture') == True:

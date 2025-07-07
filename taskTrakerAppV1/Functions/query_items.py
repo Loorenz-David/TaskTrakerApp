@@ -292,6 +292,7 @@ def query_items_db(data):
 
 
 def unpack_assignment(unpack_type,obj):
+   
     unpacked_dict = {}
     if unpack_type == 'essentials':
         unpacked_dict = {
@@ -327,7 +328,7 @@ def unpack_assignment(unpack_type,obj):
             'condition':obj.item.condition,
             'notes':obj.item.notes,
             'item_type':obj.item.item_type,
-            
+            'upholstery':obj.item.upholstery
         }
 
         
@@ -357,9 +358,7 @@ def unpack_assignment(unpack_type,obj):
             task_dict_list.append(task_dict)
         unpacked_dict['assign_task'] = task_dict_list
 
-        if obj.item.item_class == 'for resting':
-            unpacked_dict['upholstery'] = obj.item.upholstery
-
+      
     return unpacked_dict
     
 

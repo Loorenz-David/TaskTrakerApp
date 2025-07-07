@@ -262,11 +262,12 @@ function load_item_query(data = undefined){
         items.forEach(item =>{
             let cloneItemContainer = templateItemContainer.content.cloneNode(true)
             let imagesUrl = item.images_url?.[0]
-
+            
             let itemContainer = cloneItemContainer.querySelector('[data-value="itemContainer"]')
             itemContainer.setAttribute('data-id',item.id)
             
             if(imagesUrl){
+               
                 cloneItemContainer.querySelector("[data-value='itemImage']").src = imagesUrl
             }
             if(item.due_date){

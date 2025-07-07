@@ -63,7 +63,7 @@ async function load_selected_item(itemData,itemId,section=undefined){
     })
     // ---------------------------------
 
-
+    console.log(itemData)
 
     pageForEditItem.style.display = 'flex'
     btnSaveItem.setAttribute('item-id',itemData['id'])
@@ -231,6 +231,7 @@ checkInputsChanges.forEach(input =>{
                 
                 input.addEventListener('change',(e)=>{
                     modifyData['simple_inputs'][keyName] = input.value
+                   
                 })
                 
             }
@@ -263,9 +264,19 @@ btnSaveItem.addEventListener('click',async  (e)=>{
     
     
 
-    
+   
+
     if(Object.keys(modifyData).length > 2 || Object.keys(modifyData['simple_inputs']).length > 0){
         modifyData['item_id'] = itemId
+
+         if('storage_type' in modifyData['simple_inputs'] &&  !('storage_number' in modifyData['simple_inputs'])){
+            let storageNumber = document.querySelector('[data-value = "storage_number"]')
+           
+            modifyData['simple_inputs']['storage_number'] = storageNumber.value
+
+        }
+
+
         let response = await request_handler('main','edit_item',modifyData)
        
         if(response['status'] == 'confirmation'){

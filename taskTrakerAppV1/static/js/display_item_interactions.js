@@ -6,6 +6,9 @@ let taskObjContainer = document.getElementById('TaskObjContainer')
 let TemplateForTask = document.getElementById('TemplateForTaskContainer')
 let btntaskIncompleted = document.getElementById('btnTaskIncompleted')
 let reasonForTaskIncompleted = document.getElementById('reasonForTaskIncompleted')
+const complementaryDataLoader= document.getElementById('complementaryDataLoader')
+const restartItemContainer = document.getElementById('restartItemContainer')
+
 const btnInteractions = document.getElementById('btn-interactions')
 const btnStart = document.getElementById('btnStart')
 const btnFinish =document.getElementById('btnFinish')
@@ -44,7 +47,10 @@ function clearPage(){
     }
 
     taskObjContainer.innerHTML = ''
+    
 
+    complementaryDataLoader.classList.toggle('hide')
+    restartItemContainer.classList.toggle('hide')
 
 }
 
@@ -97,7 +103,12 @@ async function load_selected_item(itemData,itemId,section=undefined){
                         'selected_assignment': itemId,
                         'section_id':itemData['section_id'],
                         'unpack_type':'for_display'}
+
+    // informs the user that the data is loading
+    
+    
     let response = await request_handler('main','get_items',postFetchDict)
+    
     if(response['status'] == 'confirmation'){
         console.log(response['data'])
         let postLoadData = response['data'][0]
@@ -168,6 +179,8 @@ async function load_selected_item(itemData,itemId,section=undefined){
                     }
                 }
             }
+        complementaryDataLoader.classList.toggle('hide')
+        restartItemContainer.classList.toggle('hide')
     }
     
     // load pause Reasons
