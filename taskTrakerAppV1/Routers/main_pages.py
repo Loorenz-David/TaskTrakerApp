@@ -349,6 +349,7 @@ def get_items():
             items_found = query_items_db(data)
             response['data'] = items_found[0]
             response['data_count'] = items_found[1]
+            response['total_pages'] = items_found[2]
         response['status'] = 'confirmation'
         response['message'] = 'Data adquired!'
 

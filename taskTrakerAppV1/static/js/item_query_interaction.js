@@ -350,7 +350,7 @@ function load_item_counts(dataCounts){
 
 
 
-async function first_load_query(fetchDict){
+async function first_load_query(fetchDict,pagination=false){
     
     response = await request_handler('main','get_items',fetchDict)
     if (response['status'] == 'confirmation'){
@@ -369,6 +369,17 @@ async function first_load_query(fetchDict){
         let flatList = Data.flatMap(([storageName,items]) => items)
         dataMap = new Map(flatList.map(obj =>[obj.id, obj] ))
         load_item_query(Data)
+
+        if(pagination){
+            totalPageCount = response['total_pages']
+            totalPageCountElement.textContent = totalPageCount
+            localStorage.setItem('page_main_db',currentPageCount)
+            if(totalPageCount == currentPageCount){
+                nextPage.classList.add('hide')
+                btnHid = nextPage
+            }
+            
+        }
         
     }
     else{
@@ -440,13 +451,21 @@ async function input_query(){
                     
                 }
             }
+            if(paginationContainer){
+                paginationContainer.classList.add('hide')
+            }
 
         }
         
         load_item_query(inputQueryData)
     }else{
         inputQueryData = []
+
         load_item_query(Data)
+
+        if(paginationContainer){
+            paginationContainer.classList.remove('hide')
+        }
     }
 }
 
@@ -633,8 +652,10 @@ statusContainer.addEventListener('click',async (e)=>{
         }
 
         
-
         load_item_query(filteredData)
+        
+
+        
         
         
     }

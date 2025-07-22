@@ -1,7 +1,7 @@
 from taskTrakerAppV1.models import Items_Sections, Sections, Items, Tasks_Items,Tasks, Tasks_Sections
 from taskTrakerAppV1 import db
 from datetime import datetime, timedelta, timezone
-from sqlalchemy import and_, func, and_, case, or_
+from sqlalchemy import and_, func, and_, case, or_,asc
 
 
 def query_items(data):
@@ -241,7 +241,8 @@ def sort_by_storage(list_of_items):
 def query_items_db(data):
 
     count_results = {}
-    query = Items.query
+    total_pages = 0
+    query = Items.query.order_by(asc(Items.storage_number))
 
     if data.get('user_filters'):
         for key, values in data['user_filters'].items():
@@ -252,6 +253,10 @@ def query_items_db(data):
 
     if data['query_type'] == 'all':
         query = query.all()
+    elif data['query_type'] == 'pagination':
+        paginated = query.paginate(page=data['page'],per_page=data['per_page'],error_out=False)
+        query = paginated.items
+        total_pages = paginated.pages
 
     elif data['query_type'] == 'input_query':
         
@@ -287,7 +292,7 @@ def query_items_db(data):
         count_results = dict(resluts)
     
 
-    return list_of_items, count_results
+    return list_of_items, count_results, total_pages
 
 
 
