@@ -421,7 +421,7 @@ async function input_query(){
     
 
     
-    if(value.length > 0){
+    if(value !== ''){
         inputQueryData = []
         if(inputQueryType == 'front_end_query'){
             
@@ -452,7 +452,10 @@ async function input_query(){
                 }
             }
             if(paginationContainer){
-                paginationContainer.classList.add('hide')
+                if(!paginationContainer.classList.contains('hide')){
+                    paginationContainer.classList.add('hide')
+                }
+                
             }
 
         }
