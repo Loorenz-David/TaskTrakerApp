@@ -54,6 +54,11 @@ async function handlePageFetchFunc(element){
     if(Object.keys(queryFiltersDict['for_query']).length > 0 ){
         fetchDictFirstLoad['user_filters'] = queryFiltersDict['for_query']
     }
+
+    if(selectedStatusList.length > 0){
+        clearStatusContainer()
+    }
+
     first_load_query(fetchDictFirstLoad,true)
 
     
